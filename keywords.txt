@@ -1,0 +1,38 @@
+###############################################################
+# Syntax Coloring Map for Murata SCL3300 Inclinometer Library #
+###############################################################
+
+#######################################
+# Class
+###################################################################
+
+SCL3300	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+reset	KEYWORD2
+setmode	KEYWORD2
+ReadDataBlock	KEYWORD2
+ReadErrFlag_1	KEYWORD2
+ReadErrFlag_2	KEYWORD2
+ReadSerialNum	KEYWORD2
+temperature	KEYWORD2
+temperatureF	KEYWORD2
+angle	KEYWORD2
+acceleration	KEYWORD2
+PwrDwnMode	KEYWORD2
+WakeUp	KEYWORD2
+
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+SPI_MODE	LITERAL1
