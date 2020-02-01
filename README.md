@@ -1,12 +1,14 @@
 # Arduino-SCL3300
+
+
 Arduino library for interfacing with the Murata SCL3300 Inclinometer via SPI
 
-Februrary 2020 - Version 1.0.0
+Februrary 2020 - Version 1.0.0 - 
 By B David Armstrong
+
 https://github.com/DavidArmstrong/Arduino-SCL3300
+
 See MIT LICENSE.md file
-Absolutely no warantee is expressed or implied.  (Frying your chip is your fault, not mine.)
-=============================
 
 This is an example test sketch that demonstrates the use of the SCL3300 Inclinometer library with the Arduino IDE.  
 
@@ -16,10 +18,13 @@ https://learn.sparkfun.com/tutorials/terminal-basics/tera-term-windows
 One can obtain a Murata inclinometer from on-line retailers.  Mounting the bare surface-mount integrated circuit onto a PCB requires special handling though. For this reason, for the usual one-off use, I'd recommend obtaining Murata's own Evaluation PCB as sold by Mouser Electronics.  Here are two references I've found:
 
 SPI Murata SCL3300-D01-1 inclinometer: https://www.mouser.com/ProductDetail/Murata-Electronics/SCL3300-D01-PCB?qs=vLWxofP3U2yrcJsOYvcWaQ%3D%3D
+
 https://www.digikey.com/product-detail/en/murata-electronics-north-america/SCL3300-D01-10/490-18218-1-ND/9950619
+
 Note: Yeah, it's a pricey little item.  But there really isn't anything else that will do the job.
 
 Datasheet: https://www.murata.com/-/media/webrenewal/products/sensor/pdf/datasheet/datasheet_scl3300-d01.ashx?la=en-us
+
 Evaluation Board: https://www.murata.com/-/media/webrenewal/products/sensor/pdf/specification/pcbspec_scx3300.ashx?la=en-us
 
 ==========================
