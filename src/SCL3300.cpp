@@ -3,13 +3,13 @@ SCL3300.cpp
 SCL3300 Arduino Driver
 David Armstrong
 Feb 2020
-https://github.com/
+https://github.com/DavidArmstrong/Arduino-SCL3300/blob/master/src/SCL3300.cpp
 
 Resources:
 Uses SPI.h for SPI operation
 
 Development environment specifics:
-Arduino IDE 1.8.9
+Arduino IDE 1.8.9 and 1.8.11
 Teensy loader - untested
 
 This code is released under the [MIT License](http://opensource.org/licenses/MIT).
