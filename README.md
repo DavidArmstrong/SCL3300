@@ -28,6 +28,8 @@ IMPORTANT!
 
 The Murata SPI inclinometer SCL3300 is a 3.3 volt device.  As such, it must NOT be connected directly to the SPI pins on an Arduino UNO or compatible board, as these systems are designed with 5 volt interface pins.  For all 5 volt systems, it is required that a bidirectional level shifter be used to handle the electrical signal translation.
 
+Also, be sure to tie the DVIO pin to +3.3 volts.  That is required to power the digital interface of the device.
+
 Here is a reference for how to provide a compatible electrical setup:
 
 https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi
