@@ -27,14 +27,14 @@ boolean SCL3300::setMode(int modeNum) {
   // Only allowed values are: 1,2,3,4
   if (modeNum > 0 && modeNum < 5) {
     scl3300_mode = modeNum;
-	beginTransmission(); //Set up this SPI port/bus
+    beginTransmission(); //Set up this SPI port/bus
     transfer(modeCMD[scl3300_mode]); //Set mode on hardware
-	endTransmission(); //Let go of SPI port/bus
-	if (crcerr || statuserr) {
+    endTransmission(); //Let go of SPI port/bus
+    if (crcerr || statuserr) {
       return false;
     } else return true; // Valid value
   } else
-	return false; // Invalid value
+    return false; // Invalid value
 }
 
 // Current Version of begin() to initialize the library and the SCL3300
@@ -287,7 +287,7 @@ uint16_t SCL3300::powerDownMode(void) {
   transfer(SwtchBnk0);
   transfer(SetPwrDwn);
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return (uint16_t)(CMD && 0xff); //check CRC and RS bits
+  if (crcerr || statuserr) return (uint16_t)(CMD & 0xff); //check CRC and RS bits
   return 0;
 }
 
@@ -297,7 +297,7 @@ uint16_t SCL3300::WakeMeUp(void) {
   beginTransmission(); //Set up this SPI port/bus
   transfer(WakeUp);
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return (uint16_t)(CMD && 0xff); //check CRC and RS bits
+  if (crcerr || statuserr) return (uint16_t)(CMD & 0xff); //check CRC and RS bits
   return 0;
 }
 
@@ -308,7 +308,7 @@ uint16_t SCL3300::reset(void) {
   transfer(SwtchBnk0);
   transfer(SWreset);
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return (uint16_t)(CMD && 0xff); //check CRC and RS bits
+  if (crcerr || statuserr) return (uint16_t)(CMD & 0xff); //check CRC and RS bits
   return 0;
 }
 
@@ -361,14 +361,14 @@ void SCL3300::endTransmission() {
 //Initialize the Arduino SPI library for the SCL3300 hardware
 void SCL3300::initSPI() {
   //Initialize the Arduino SPI library for the SCL3300 hardware
-	SPI.begin();
-	// Maximum SPI frequency is 2 MHz - 4 MHz to achieve the best performance
-	// initialize the chip select pin:
-	pinMode(scl3300_csPin, OUTPUT);
-	digitalWrite(scl3300_csPin, HIGH);
-	// Data is read and written MSb first.
-	// Data is captured on rising edge of clock (CPHA = 0)
-	// Data is propagated on the falling edge (MISO line) of the SCK. (CPOL = 0)
+  SPI.begin();
+  // Maximum SPI frequency is 2 MHz - 4 MHz to achieve the best performance
+  // initialize the chip select pin:
+  pinMode(scl3300_csPin, OUTPUT);
+  digitalWrite(scl3300_csPin, HIGH);
+  // Data is read and written MSb first.
+  // Data is captured on rising edge of clock (CPHA = 0)
+  // Data is propagated on the falling edge (MISO line) of the SCK. (CPOL = 0)
 }
 
 // The following is taken directly from the Murata SCL3300 datasheet
@@ -433,20 +433,20 @@ unsigned long SCL3300::transfer(unsigned long value) {
   digitalWrite(scl3300_csPin, HIGH); //And we are done
   #ifdef debug_scl3300
   for (int i = 3; i >= 0; i--) {
-	Serial_SCL.print(" ");
+    Serial_SCL.print(" ");
     Serial_SCL.print(dataorig.bit8[i], HEX);
   }
   Serial_SCL.print("  ");
   #endif
   if (CRC == CalculateCRC(dataorig.bit32))
-	  crcerr = false;
+    crcerr = false;
   else
-	  crcerr = true;
+    crcerr = true;
   //check RS bits
   if ((CMD && 0x03) == 0x01)
-	  statuserr = false;
+    statuserr = false;
   else
-	  statuserr = true;
+    statuserr = true;
   #ifdef debug_scl3300
   Serial_SCL.print((CMD && 0x03));
   Serial_SCL.print(" ");
