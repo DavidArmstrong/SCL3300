@@ -1,10 +1,10 @@
-###############################################################
-# Syntax Coloring Map for Murata SCL3300 Inclinometer Library #
-###############################################################
+########################################################
+# Syntax Coloring Map for SCL3300 Inclinometer Library #
+########################################################
 
 #######################################
 # Class
-###################################################################
+#######################################
 
 SCL3300	KEYWORD1
 
@@ -14,16 +14,24 @@ SCL3300	KEYWORD1
 
 begin	KEYWORD2
 reset	KEYWORD2
-setmode	KEYWORD2
+setMode	KEYWORD2
+isConnected	KEYWORD2
+available	KEYWORD2
+getCalculatedAngleX	KEYWORD2
+getCalculatedAngleY	KEYWORD2
+getCalculatedAngleZ	KEYWORD2
+getCalculatedAccelerometerX	KEYWORD2
+getCalculatedAccelerometerY	KEYWORD2
+getCalculatedAccelerometerZ	KEYWORD2
 ReadDataBlock	KEYWORD2
-ReadErrFlag_1	KEYWORD2
-ReadErrFlag_2	KEYWORD2
-ReadSerialNum	KEYWORD2
-temperature	KEYWORD2
-temperatureF	KEYWORD2
+getErrFlag1	KEYWORD2
+getErrFlag2	KEYWORD2
+getSerialNumber	KEYWORD2
+getCalculatedTemperatureCelsius	KEYWORD2
+getCalculatedTemperatureFarenheit	KEYWORD2
 angle	KEYWORD2
 acceleration	KEYWORD2
-PwrDwnMode	KEYWORD2
+powerDownMode	KEYWORD2
 WakeUp	KEYWORD2
 
 
