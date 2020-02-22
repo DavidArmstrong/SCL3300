@@ -20,7 +20,7 @@ void setup() {
   Serial.println("Reading basic Accelerometer values from SCL3300 Inclinometer");
 
   if (inclinometer.begin() == false) {
-	Serial.println("Murata SCL3300 inclinometer not connected.");
+    Serial.println("Murata SCL3300 inclinometer not connected.");
     while(1); //Freeze
   }
 }
