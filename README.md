@@ -6,7 +6,7 @@ Version 2.0.0 - February 22, 2020
 By B David Armstrong
 https://github.com/DavidArmstrong/Arduino-SCL3300
 See MIT LICENSE.md file
-=============================
+
 
 The Murata SCL3300 inclinometer sensor is a 3.3 volt device used to measure tilt in three axes simultaneously.
 
