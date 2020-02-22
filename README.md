@@ -2,6 +2,7 @@
 
 
 Arduino Library for Murata SCL3300 Inclinometer
+
   Version 2.0.0 - February 22, 2020
   By David Armstrong
   https://github.com/DavidArmstrong/Arduino-SCL3300
@@ -40,7 +41,9 @@ isConnected()   -- Returns 'true' if the sensor is still responding as expected,
 available()     -- Reads the raw SCL3300 sensor data as a group so that all the data is consistent.  Call this first before using the functions below.
 
 getCalculatedAngleX() -- Returns a double float of the tilt value in degrees for the X direction.
+
 getCalculatedAngleY() -- Returns a double float of the tilt value in degrees for the Y direction.
+
 getCalculatedAngleZ() -- Returns a double float of the tilt value in degrees for the Z direction.
 
 getCalculatedAccelerometerX() -- Returns a double float of the accelerometer value in units of 'g' for the X direction.
@@ -48,14 +51,18 @@ getCalculatedAccelerometerY() -- Returns a double float of the accelerometer val
 getCalculatedAccelerometerZ() -- Returns a double float of the accelerometer value in units of 'g' for the Z direction.
 
 getTemperatureCelsius()   -- Returns a double float of the temperature in Celsius.
+
 getTemperatureFarenheit() -- Returns a double float of the temperature in Farenheit.
 
 
 Utility Functions available:
 
 reset()           -- Does a hardware reset of the SCL3300 sensor.
+
 getSerialNumber() -- Returns a long integer of the device Serial Number set by the manufacturer.
+
 powerDownMode()   -- Puts the sensor in a power down mode to reduce power usage.
+
 WakeMeUp()        -- Revives sensor from being powered down, so that it can start to generate sensor data.
 
 setMode(modeNum) -- Sets the sensor mode to the number provided as modeNum.  The default mode is '4'.  Valid values are 1, 2, 3, and 4.
