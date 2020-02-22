@@ -2,7 +2,7 @@
 SCL3300.h
 SCL3300 Arduino Library Header File
 David Armstrong
-Feb 2020
+Version 2.0.0 - February 22, 2020
 
 This file prototypes the SCL3300 class, as implemented in SCL3300.cpp
 
@@ -10,7 +10,7 @@ Resources:
 Uses SPI.h for SPI operation
 
 Development environment specifics:
-Arduino IDE 1.8.9 and 1.8.11
+Arduino IDE 1.8.9, 1.8.11, and 1.8.12
 Teensy loader - untested
 
 This code is released under the [MIT License](http://opensource.org/licenses/MIT).
@@ -29,7 +29,7 @@ TODO:
 //Uncomment the following line for debugging output
 //#define debug_scl3300
 
-// Need the following define for the Sparkfun Turbo
+// Need the following define for SAMD processors
 #if defined (ARDUINO_ARCH_SAMD)
 #define Serial_SCL SerialUSB
 #else
@@ -99,7 +99,7 @@ struct SCL3300data {
 	uint16_t AngY;
 	uint16_t AngZ;
 	uint16_t StatusSum;
-	uint8_t WHOAMI;
+	uint16_t WHOAMI;
 };
 
 // SCL3300 library interface description
@@ -109,21 +109,28 @@ class SCL3300 {
     SPISettings spiSettings{SCL3300_SPI_CLOCK, MSBFIRST, SCL3300_SPI_MODE};
 	
     SCL3300data sclData;
-	bool setmode(int mode);
-    uint16_t begin(void);
-	uint16_t begin(uint8_t csPin);
-	uint16_t begin(SPIClass &spiPort, uint8_t csPin);
+	boolean setMode(int mode);
+    boolean begin(void);
+	boolean begin(uint8_t csPin);
+	boolean begin(SPIClass &spiPort, uint8_t csPin);
     //Functions to retrieve sensor data
-	uint16_t ReadDataBlock(void);
-	uint16_t ReadErrFlag_1(void);
-	uint16_t ReadErrFlag_2(void);
-	long unsigned ReadSerialNum(void);
-    double temperature(void);
-	double temperatureF(void);
+	boolean isConnected();
+	boolean available(void);
+	double getCalculatedAngleX(void);
+	double getCalculatedAngleY(void);
+	double getCalculatedAngleZ(void);
+	double getCalculatedAccelerometerX(void);
+	double getCalculatedAccelerometerY(void);
+	double getCalculatedAccelerometerZ(void);
+	uint16_t getErrFlag1(void);
+	uint16_t getErrFlag2(void);
+	long unsigned getSerialNumber(void);
+    double getCalculatedTemperatureCelsius(void);
+	double getCalculatedTemperatureFarenheit(void);
 	double angle(uint16_t ANG); //two's complement value expected
 	double acceleration(uint16_t ACC);
     bool crcerr, statuserr;
-	uint16_t PwrDwnMode(void);
+	uint16_t powerDownMode(void);
 	uint16_t WakeMeUp(void);
 	uint16_t reset(void);
 	
@@ -136,7 +143,7 @@ class SCL3300 {
 	uint8_t CMD, CRC;
 	uint16_t DATA;
 	double Temperature, X_angle, Y_angle, Z_angle;
-	uint16_t TEMP, ANG_X, ANG_Y, ANG_Z;
+	//uint16_t TEMP, ANG_X, ANG_Y, ANG_Z;
 	
     void initSPI();
     void beginTransmission();
