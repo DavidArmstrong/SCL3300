@@ -11,6 +11,7 @@ Arduino Library for Murata SCL3300 Inclinometer
 The Murata SCL3300 inclinometer sensor is a 3.3 volt device used to measure tilt in three axes simultaneously.
 
   Datasheet: https://www.murata.com/-/media/webrenewal/products/sensor/pdf/datasheet/datasheet_scl3300-d01.ashx?la=en-us
+
   Evaluation Board: https://www.murata.com/-/media/webrenewal/products/sensor/pdf/specification/pcbspec_scx3300.ashx?la=en-us
 
 Notes:
@@ -51,6 +52,7 @@ getTemperatureFarenheit() -- Returns a double float of the temperature in Farenh
 
 
 Utility Functions available:
+
 reset()           -- Does a hardware reset of the SCL3300 sensor.
 getSerialNumber() -- Returns a long integer of the device Serial Number set by the manufacturer.
 powerDownMode()   -- Puts the sensor in a power down mode to reduce power usage.
