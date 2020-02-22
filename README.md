@@ -2,16 +2,16 @@
 
 
 Arduino Library for Murata SCL3300 Inclinometer
-Version 2.0.0 - February 22, 2020
-By B David Armstrong
-https://github.com/DavidArmstrong/Arduino-SCL3300
-See MIT LICENSE.md file
+  Version 2.0.0 - February 22, 2020
+  By David Armstrong
+  https://github.com/DavidArmstrong/Arduino-SCL3300
+  See MIT LICENSE.md file
 
 
 The Murata SCL3300 inclinometer sensor is a 3.3 volt device used to measure tilt in three axes simultaneously.
 
-Datasheet: https://www.murata.com/-/media/webrenewal/products/sensor/pdf/datasheet/datasheet_scl3300-d01.ashx?la=en-us
-Evaluation Board: https://www.murata.com/-/media/webrenewal/products/sensor/pdf/specification/pcbspec_scx3300.ashx?la=en-us
+  Datasheet: https://www.murata.com/-/media/webrenewal/products/sensor/pdf/datasheet/datasheet_scl3300-d01.ashx?la=en-us
+  Evaluation Board: https://www.murata.com/-/media/webrenewal/products/sensor/pdf/specification/pcbspec_scx3300.ashx?la=en-us
 
 Notes:
   1) The SCL3300 inclinometer will require a bidrectional level shifter to interface the SPI pins to 5 volt devices, such as the Arduino Uno.
