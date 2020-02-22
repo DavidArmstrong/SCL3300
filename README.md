@@ -1,50 +1,69 @@
-# Arduino-SCL3300
+# SCL3300
 
 
-Arduino library for interfacing with the Murata SCL3300 Inclinometer via SPI
+Arduino Library for Murata SCL3300 Inclinometer
 
-Februrary 2020 - Version 1.0.0 - 
-By B David Armstrong
+  Version 2.0.0 - February 22, 2020
+  
+  By David Armstrong
+  https://github.com/DavidArmstrong/Arduino-SCL3300
+  See MIT LICENSE.md file
 
-https://github.com/DavidArmstrong/Arduino-SCL3300
 
-See MIT LICENSE.md file
+The Murata SCL3300 inclinometer sensor is a 3.3 volt device used to measure tilt in three axes simultaneously.
 
-One can obtain a Murata inclinometer from on-line retailers.  Mounting the bare surface-mount integrated circuit onto a PCB requires special handling though. For this reason, for the usual one-off use, I'd recommend obtaining Murata's own Evaluation PCB as sold by Mouser Electronics.  Here are two references I've found:
+  Datasheet: https://www.murata.com/-/media/webrenewal/products/sensor/pdf/datasheet/datasheet_scl3300-d01.ashx?la=en-us
 
-SPI Murata SCL3300-D01-1 inclinometer: https://www.mouser.com/ProductDetail/Murata-Electronics/SCL3300-D01-PCB?qs=vLWxofP3U2yrcJsOYvcWaQ%3D%3D
+  Evaluation Board: https://www.murata.com/-/media/webrenewal/products/sensor/pdf/specification/pcbspec_scx3300.ashx?la=en-us
 
-https://www.digikey.com/product-detail/en/murata-electronics-north-america/SCL3300-D01-10/490-18218-1-ND/9950619
+Notes:
+  1) The SCL3300 inclinometer will require a bidrectional level shifter to interface the SPI pins to 5 volt devices, such as the Arduino Uno.
+  2) A pull-up resistor may be required on the Chip/Slave Select line of the SCL3300.  A typical resistor value of 4.7k ohms should connect this pin to +3.3 volts.
+  3) Be sure to connect the SCL3300 DVIO pin to +3.3 voles as well.  This pin powers the digital pins.
 
-Note: Yeah, it's a pricey little item.  But there really isn't anything else that will do the job.
-
-Datasheet: https://www.murata.com/-/media/webrenewal/products/sensor/pdf/datasheet/datasheet_scl3300-d01.ashx?la=en-us
-
-Evaluation Board: https://www.murata.com/-/media/webrenewal/products/sensor/pdf/specification/pcbspec_scx3300.ashx?la=en-us
-
-==========================
-
-IMPORTANT!
-
-The Murata SPI inclinometer SCL3300 is a 3.3 volt device.  As such, it must NOT be connected directly to the SPI pins on an Arduino UNO or compatible board, as these systems are designed with 5 volt interface pins.  For all 5 volt systems, it is required that a bidirectional level shifter be used to handle the electrical signal translation.
-
-Also, be sure to tie the SCL3300 chip DVIO pin to +3.3 volts.  That is required to power the digital interface of the device.
-
-Here is a reference for how to provide a compatible electrical setup:
-
-https://learn.sparkfun.com/tutorials/serial-peripheral-interface-spi
-
-Sparkfun bi-directional level shifter: https://www.sparkfun.com/products/12009
-
-NOTE: Careful reading of SPI interface documentation suggests that it is a good idea to have a pull-up resistor to +3.3 volts installed on the Chip/Slave Select line of the SPI interface.  A typical value would be 4.7k ohms.  The reason for this is because latch timing can be related to stable chip select levels.  The Sparkfun Redboard Turbo requires this pull-up resistor to be able communicate with the SCL3300 at all.
-
-For an Arduino Uno, use these pins:
+For an Arduino Uno, the default SPI pins are as follows:
 SCK - Digital Pin 13
 SDO - Digital Pin 12 (MISO)
 SDI - Digital Pin 11 (MOSI)
-CS - Digital Pin 10  (SS)
+CS  - Digital Pin 10 (SS)
 
-For a SAMD-type Arduino, such as the Sparkfun Redboard Turbo, the default SPI pins are only on the ICSP connector:
-pins 22 (MISO), 23 (MOSI), and 24 (SCK) on ICSP header, and for Chip/Slave Select use digital Pin 10
+For a SAMD-type Arduino, such as the Sparkfun Redboard Turbo or Arduino Zero, the default SPI pins are only available on the ICSP connector:
+pins 22 (MISO), 23 (MOSI), and 24 (SCK) are on ICSP header, and for Chip/Slave Select uses digital Pin 10 as the default.
 
 ======================================
+
+Basic SCL3300 Library Functions:
+
+begin()         -- This initializes the library and the SPI chip, and by default assigns the SPI Chip Select Pin to Digital Pin 10.
+begin(csPinNum) -- This variaion allows you to choose a different pin as the SPI Chip Select Pin.  Replace 'csPinNum' with your pin number.
+
+isConnected()   -- Returns 'true' if the sensor is still responding as expected, and able to provide valid data.
+
+available()     -- Reads the raw SCL3300 sensor data as a group so that all the data is consistent.  Call this first before using the functions below.
+
+getCalculatedAngleX() -- Returns a double float of the tilt value in degrees for the X direction.
+
+getCalculatedAngleY() -- Returns a double float of the tilt value in degrees for the Y direction.
+
+getCalculatedAngleZ() -- Returns a double float of the tilt value in degrees for the Z direction.
+
+getCalculatedAccelerometerX() -- Returns a double float of the accelerometer value in units of 'g' for the X direction.
+getCalculatedAccelerometerY() -- Returns a double float of the accelerometer value in units of 'g' for the Y direction.
+getCalculatedAccelerometerZ() -- Returns a double float of the accelerometer value in units of 'g' for the Z direction.
+
+getTemperatureCelsius()   -- Returns a double float of the temperature in Celsius.
+
+getTemperatureFarenheit() -- Returns a double float of the temperature in Farenheit.
+
+
+Utility Functions available:
+
+reset()           -- Does a hardware reset of the SCL3300 sensor.
+
+getSerialNumber() -- Returns a long integer of the device Serial Number set by the manufacturer.
+
+powerDownMode()   -- Puts the sensor in a power down mode to reduce power usage.
+
+WakeMeUp()        -- Revives sensor from being powered down, so that it can start to generate sensor data.
+
+setMode(modeNum) -- Sets the sensor mode to the number provided as modeNum.  The default mode is '4'.  Valid values are 1, 2, 3, and 4.
