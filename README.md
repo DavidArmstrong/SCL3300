@@ -19,7 +19,7 @@ The Murata SCL3300 inclinometer sensor is a 3.3 volt device used to measure tilt
 Notes:
   1) The SCL3300 inclinometer will require a bidrectional level shifter to interface the SPI pins to 5 volt devices, such as the Arduino Uno.
   2) A pull-up resistor may be required on the Chip/Slave Select line of the SCL3300.  A typical resistor value of 4.7k ohms should connect this pin to +3.3 volts.
-  3) Be sure to connect the SCL3300 DVIO pin to +3.3 voles as well.  This pin powers the digital pins.
+  3) Be sure to connect the SCL3300 DVIO pin to +3.3 volts as well.  This pin powers the digital pins.
 
 For an Arduino Uno, the default SPI pins are as follows:
 SCK - Digital Pin 13
