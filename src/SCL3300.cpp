@@ -210,6 +210,27 @@ double SCL3300::getCalculatedAngleZ() {
   return angle(sclData.AngZ);
 }
 
+//Return the calculated X axis offset tilt angle in degrees
+double SCL3300::getTiltLevelOffsetAngleX() {
+  double tempX = angle(sclData.AngX);
+  if (tempX > 180.) tempX -= 360.;
+  return tempX;
+}
+
+//Return the calculated Y axis offset tilt angle in degrees
+double SCL3300::getTiltLevelOffsetAngleY() {
+  double tempY = angle(sclData.AngY);
+  if (tempY > 180.) tempY -= 360.;
+  return tempY;
+}
+
+//Return the calculated Z axis offset tilt angle in degrees
+double SCL3300::getTiltLevelOffsetAngleZ() {
+  double tempZ = angle(sclData.AngZ);
+  if (tempZ > 180.) tempZ -= 360.;
+  return tempZ;
+}
+
 //Return the calculated X axis accelerometer value in units of 'g'
 double SCL3300::getCalculatedAccelerometerX(void) {
   return acceleration(sclData.AccX);
@@ -355,7 +376,7 @@ void SCL3300::endTransmission() {
   digitalWrite(scl3300_csPin, HIGH);
   SPI.endTransaction();
   unsigned long startmillis = millis();
-  while (millis() - startmillis < 5) ; //wait a bit
+  while (millis() - startmillis < 1) ; //wait a bit
 } //beginTransmission
 
 //Initialize the Arduino SPI library for the SCL3300 hardware
@@ -418,7 +439,7 @@ unsigned long SCL3300::transfer(unsigned long value) {
   //The datasheet shows the CS line must be high during this time
   //We lengthen it some for environment variabilities
   unsigned long startmillis = millis();
-  while (millis() - startmillis < 5) ;
+  while (millis() - startmillis < 1) ;
   
   digitalWrite(scl3300_csPin, LOW); //Now chip select can be enabled for the full 32 bit xfer
   DATA = 0;
@@ -429,7 +450,7 @@ unsigned long SCL3300::transfer(unsigned long value) {
   CRC = dataorig.bit8[0];
   CMD = dataorig.bit8[3];
   startmillis = millis();
-  while (millis() - startmillis < 10) ;
+  while (millis() - startmillis < 1) ;
   digitalWrite(scl3300_csPin, HIGH); //And we are done
   #ifdef debug_scl3300
   for (int i = 3; i >= 0; i--) {
