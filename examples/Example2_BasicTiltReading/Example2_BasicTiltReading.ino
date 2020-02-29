@@ -1,6 +1,6 @@
-/* Read Accelerometer data from Murata SCL3300 Inclinometer
+/* Read Tilt angles from Murata SCL3300 Inclinometer
  * Version 2.0.0 - February 22, 2020
- * Example2_BasicAccelerometerReading
+ * Example2_BasicTiltReading
 */
 
 #include <SPI.h>
@@ -17,7 +17,7 @@ SCL3300 inclinometer;
 void setup() {
   Serial.begin(9600);
   delay(2000); //SAMD boards may need a long time to init SerialUSB
-  Serial.println("Reading basic Accelerometer values from SCL3300 Inclinometer");
+  Serial.println("Reading basic Tilt values from SCL3300 Inclinometer");
 
   if (inclinometer.begin() == false) {
     Serial.println("Murata SCL3300 inclinometer not connected.");
@@ -27,14 +27,14 @@ void setup() {
 
 void loop() {
   if (inclinometer.available()) { //Get next block of data from sensor
-    Serial.print("X Accelerometer: ");
-    Serial.print(inclinometer.getCalculatedAccelerometerX());
+    Serial.print("X Tilt: ");
+    Serial.print(inclinometer.getCalculatedAngleX());
     Serial.print("\t");
-    Serial.print("Y Accelerometer: ");
-    Serial.print(inclinometer.getCalculatedAccelerometerY());
+    Serial.print("Y Tilt: ");
+    Serial.print(inclinometer.getCalculatedAngleY());
     Serial.print("\t");
-    Serial.print("Z Accelerometer: ");
-    Serial.println(inclinometer.getCalculatedAccelerometerZ());
+    Serial.print("Z Tilt: ");
+    Serial.println(inclinometer.getCalculatedAngleZ());
     delay(250); //Allow a little time to see the output
   }
 }

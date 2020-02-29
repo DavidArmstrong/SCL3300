@@ -1,6 +1,6 @@
 /* Read Raw sensor data from Murata SCL3300 Inclinometer
  * Version 2.0.0 - February 22, 2020
- * Example4_RawDataReading
+ * Example5_RawDataReading
 */
 
 #include <SPI.h>

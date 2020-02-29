@@ -20,6 +20,9 @@ available	KEYWORD2
 getCalculatedAngleX	KEYWORD2
 getCalculatedAngleY	KEYWORD2
 getCalculatedAngleZ	KEYWORD2
+getTiltLevelOffsetAngleX	KEYWORD2
+getTiltLevelOffsetAngleY	KEYWORD2
+getTiltLevelOffsetAngleZ	KEYWORD2
 getCalculatedAccelerometerX	KEYWORD2
 getCalculatedAccelerometerY	KEYWORD2
 getCalculatedAccelerometerZ	KEYWORD2

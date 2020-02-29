@@ -1,6 +1,6 @@
 /* Read Temperature Sensor from Murata SCL3300 Inclinometer
  * Version 2.0.0 - February 22, 2020
- * Example3_BasicTemperatureReading
+ * Example4_BasicTemperatureReading
 */
 
 #include <SPI.h>
