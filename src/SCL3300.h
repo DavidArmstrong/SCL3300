@@ -119,9 +119,9 @@ class SCL3300 {
     double getCalculatedAngleX(void);
     double getCalculatedAngleY(void);
     double getCalculatedAngleZ(void);
-	double getTiltLevelOffsetAngleX(void);
-	double getTiltLevelOffsetAngleY(void);
-	double getTiltLevelOffsetAngleZ(void);
+    double getTiltLevelOffsetAngleX(void);
+    double getTiltLevelOffsetAngleY(void);
+    double getTiltLevelOffsetAngleZ(void);
     double getCalculatedAccelerometerX(void);
     double getCalculatedAccelerometerY(void);
     double getCalculatedAccelerometerZ(void);
