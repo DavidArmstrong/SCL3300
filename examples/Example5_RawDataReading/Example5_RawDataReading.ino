@@ -53,7 +53,8 @@ void loop() {
     Serial.print("Raw Temperature: ");
     Serial.println(inclinometer.sclData.TEMP);
     Serial.print("Serial Number Register: ");
-    Serial.print(inclinometer.getSerialNumber(), HEX);
+    Serial.print(inclinometer.getSerialNumber());
+    Serial.print("B33");
     Serial.print("\t");
     Serial.print("SL3300 Status Summary Register: ");
     Serial.println(inclinometer.sclData.StatusSum, HEX);

@@ -283,19 +283,14 @@ unsigned long SCL3300::getSerialNumber(void) {
     endTransmission(); //Let go of SPI port/bus
     return 0;
   }
-  transfer(RdSer1);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return 0;
-  }
-  serialNum = DATA;
   transfer(RdSer2);
+  serialNum = DATA;
   if (crcerr || statuserr) {
     endTransmission(); //Let go of SPI port/bus
     return 0;
   }
   transfer(SwtchBnk0);
-  serialNum = (serialNum << 16) + DATA;
+  serialNum = (DATA << 16) | serialNum;
   endTransmission(); //Let go of SPI port/bus
   if (crcerr || statuserr) return 0;
   return serialNum;
