@@ -2,7 +2,7 @@
 SCL3300.cpp
 SCL3300 Arduino Driver
 David Armstrong
-Version 2.0.0 - February 22, 2020
+Version 2.1.1 - March 3, 2020
 https://github.com/DavidArmstrong/SCL3300
 
 Resources:
