@@ -81,7 +81,7 @@ TODO:
 #define SWreset		0xb4002098
 #define RdWHOAMI	0x40000091
 #define RdSer1		0x640000a7
-#define RdSer2		0x640000ad
+#define RdSer2		0x680000AD
 #define RdCurBank	0x7c0000b3
 #define SwtchBnk0	0xfc000073
 #define SwtchBnk1	0xfc00016e
