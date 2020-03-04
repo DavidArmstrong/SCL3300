@@ -2,7 +2,7 @@
 SCL3300.h
 SCL3300 Arduino Library Header File
 David Armstrong
-Version 2.0.0 - February 22, 2020
+Version 2.1.1 - March 3, 2020
 
 This file prototypes the SCL3300 class, as implemented in SCL3300.cpp
 
