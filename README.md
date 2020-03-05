@@ -35,7 +35,7 @@ pins 22 (MISO), 23 (MOSI), and 24 (SCK) are on ICSP header, and for Chip/Slave S
 Basic SCL3300 Library Functions:
 
 begin()         -- This initializes the library and the SPI chip, and by default assigns the SPI Chip Select Pin to Digital Pin 10.
-begin(csPinNum) -- This variaion allows you to choose a different pin as the SPI Chip Select Pin.  Replace 'csPinNum' with your pin number.
+begin(csPinNum) -- This variation allows you to choose a different pin as the SPI Chip Select Pin.  Replace 'csPinNum' with your pin number.
 
 isConnected()   -- Returns 'true' if the sensor is still responding as expected, and able to provide valid data.
 
