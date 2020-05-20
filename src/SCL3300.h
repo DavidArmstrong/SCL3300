@@ -2,7 +2,7 @@
 SCL3300.h
 SCL3300 Arduino Library Header File
 David Armstrong
-Version 2.1.1 - March 3, 2020
+Version 2.1.2 - May 19, 2020
 
 This file prototypes the SCL3300 class, as implemented in SCL3300.cpp
 
@@ -90,14 +90,14 @@ TODO:
 // We need to populate all this every time we read a set of data
 struct SCL3300data {
   public:
-    uint16_t AccX;
-    uint16_t AccY;
-    uint16_t AccZ;
-    uint16_t STO;
-    uint16_t TEMP;
-    uint16_t AngX;
-    uint16_t AngY;
-    uint16_t AngZ;
+    int16_t AccX;
+    int16_t AccY;
+    int16_t AccZ;
+    int16_t STO;
+    int16_t TEMP;
+    int16_t AngX;
+    int16_t AngY;
+    int16_t AngZ;
     uint16_t StatusSum;
     uint16_t WHOAMI;
 };
@@ -130,8 +130,8 @@ class SCL3300 {
     unsigned long getSerialNumber(void);
     double getCalculatedTemperatureCelsius(void);
     double getCalculatedTemperatureFarenheit(void);
-    double angle(uint16_t ANG); //two's complement value expected
-    double acceleration(uint16_t ACC);
+    double angle(int16_t ANG); //two's complement value expected
+    double acceleration(int16_t ACC);
     bool crcerr, statuserr;
     uint16_t powerDownMode(void);
     uint16_t WakeMeUp(void);
