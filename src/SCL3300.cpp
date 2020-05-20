@@ -2,7 +2,7 @@
 SCL3300.cpp
 SCL3300 Arduino Driver
 David Armstrong
-Version 2.1.1 - March 3, 2020
+Version 2.1.2 - May 19, 2020
 https://github.com/DavidArmstrong/SCL3300
 
 Resources:
@@ -197,38 +197,38 @@ boolean SCL3300::available(void) {
 
 //Return the calculated X axis tilt angle in degrees
 double SCL3300::getCalculatedAngleX() {
-  return angle(sclData.AngX);
+  double tempX = angle(sclData.AngX);
+  if (tempX < 0.) tempX += 360.;
+  return tempX;
 }
 
 //Return the calculated Y axis tilt angle in degrees
 double SCL3300::getCalculatedAngleY() {
-  return angle(sclData.AngY);
+  double tempY = angle(sclData.AngY);
+  if (tempY < 0.) tempY += 360.;
+  return tempY;
 }
 
 //Return the calculated Z axis tilt angle in degrees
 double SCL3300::getCalculatedAngleZ() {
-  return angle(sclData.AngZ);
+  double tempZ = angle(sclData.AngZ);
+  if (tempZ < 0.) tempZ += 360.;
+  return tempZ;
 }
 
 //Return the calculated X axis offset tilt angle in degrees
 double SCL3300::getTiltLevelOffsetAngleX() {
-  double tempX = angle(sclData.AngX);
-  if (tempX > 180.) tempX -= 360.;
-  return tempX;
+  return angle(sclData.AngX);
 }
 
 //Return the calculated Y axis offset tilt angle in degrees
 double SCL3300::getTiltLevelOffsetAngleY() {
-  double tempY = angle(sclData.AngY);
-  if (tempY > 180.) tempY -= 360.;
-  return tempY;
+  return angle(sclData.AngY);
 }
 
 //Return the calculated Z axis offset tilt angle in degrees
 double SCL3300::getTiltLevelOffsetAngleZ() {
-  double tempZ = angle(sclData.AngZ);
-  if (tempZ > 180.) tempZ -= 360.;
-  return tempZ;
+  return angle(sclData.AngZ);
 }
 
 //Return the calculated X axis accelerometer value in units of 'g'
@@ -344,14 +344,14 @@ double SCL3300::getCalculatedTemperatureFarenheit(void) {
 }
 
 //Convert raw angle value to degrees tilt
-double SCL3300::angle(uint16_t ANG) { //two's complement value expected
+double SCL3300::angle(int16_t ANG) { //two's complement value expected
   // Return Angle in degrees
   double Angle = (ANG / 16384.) * 90.; // 16384 = 2^14
   return Angle;
 }
  
  //Convert raw accelerometer value to g's of acceleration
-double SCL3300::acceleration(uint16_t ACC) { //two's complement value expected
+double SCL3300::acceleration(int16_t ACC) { //two's complement value expected
   // Return acceleration in g
   if (scl3300_mode == 1) return (double)ACC / 6000.;
   if (scl3300_mode == 2) return (double)ACC / 3000.;
