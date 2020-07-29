@@ -2,7 +2,7 @@
 SCL3300.cpp
 SCL3300 Arduino Driver
 David Armstrong
-Version 2.1.2 - May 19, 2020
+Version 2.1.3 - July 28, 2020
 https://github.com/DavidArmstrong/SCL3300
 
 Resources:
@@ -253,7 +253,7 @@ uint16_t SCL3300::getErrFlag1(void) {
   transfer(RdErrFlg1);
   transfer(RdErrFlg1);
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return (uint16_t)(CMD && 0xff); //check CRC and RS bits
+  if (crcerr || statuserr) return ((uint16_t)(CMD) & 0xff); //check CRC and RS bits
   return DATA;
 }
 
@@ -264,7 +264,7 @@ uint16_t SCL3300::getErrFlag2(void) {
   transfer(RdErrFlg2);
   transfer(RdErrFlg2);
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return (uint16_t)(CMD && 0xff); //check CRC and RS bits
+  if (crcerr || statuserr) return ((uint16_t)(CMD) & 0xff); //check CRC and RS bits
   return DATA;
 }
 
@@ -464,7 +464,7 @@ unsigned long SCL3300::transfer(unsigned long value) {
   else
     statuserr = true;
   #ifdef debug_scl3300
-  Serial_SCL.print((CMD && 0x03));
+  Serial_SCL.print((CMD & 0x03));
   Serial_SCL.print(" ");
   Serial_SCL.print(DATA, HEX);
   Serial_SCL.print(" ");
