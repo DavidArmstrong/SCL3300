@@ -3,8 +3,8 @@
 
 Arduino Library for Murata SCL3300 Inclinometer
 
-  Version 2.1.3 - July 28, 2020
-  
+  Version 2.1.4 - August 4, 2020
+
   By David Armstrong
   https://github.com/DavidArmstrong/Arduino-SCL3300
   See MIT LICENSE.md file

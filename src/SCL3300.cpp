@@ -2,7 +2,7 @@
 SCL3300.cpp
 SCL3300 Arduino Driver
 David Armstrong
-Version 2.1.3 - July 28, 2020
+Version 2.1.4 - August 4, 2020
 https://github.com/DavidArmstrong/SCL3300
 
 Resources:
@@ -80,7 +80,7 @@ boolean SCL3300::begin(void) {
   if (crcerr || statuserr) return false;
   // Once everything is initialized, return a known expected value
   // The WHOAMI command should give an 8 bit value of 0xc1
-  return (DATA == 0xc1); //Let the caller know if this worked
+  return (SCL3300_DATA == 0xc1); //Let the caller know if this worked
 }
 
 // Set up the SPI communication with the SCL3300 with provided Chip Select pin number, and provided SPI port
@@ -115,7 +115,7 @@ boolean SCL3300::isConnected() {
   if (crcerr || statuserr) return false;
   // Once everything is initialized, return a known expected value
   // The WHOAMI command should give an 8 bit value of 0xc1
-  return (DATA == 0xc1); //Let the caller know if this worked
+  return (SCL3300_DATA == 0xc1); //Let the caller know if this worked
 }
 
 //Read all the sensor data together to keep it consistent
@@ -135,64 +135,64 @@ boolean SCL3300::available(void) {
     endTransmission(); //Let go of SPI port/bus
     return false;
   }
-  sclData.AccX = DATA;
+  sclData.AccX = SCL3300_DATA;
   transfer(RdAccZ);
   if (crcerr || statuserr) {
     endTransmission(); //Let go of SPI port/bus
     return false;
   }
-  sclData.AccY = DATA;
+  sclData.AccY = SCL3300_DATA;
   transfer(RdSTO);
   if (crcerr || statuserr) {
     endTransmission(); //Let go of SPI port/bus
     return false;
   }
-  sclData.AccZ = DATA;
+  sclData.AccZ = SCL3300_DATA;
   transfer(RdTemp);
   if (crcerr || statuserr) {
     endTransmission(); //Let go of SPI port/bus
     return false;
   }
-  sclData.STO = DATA;
+  sclData.STO = SCL3300_DATA;
   transfer(RdAngX);
   if (crcerr || statuserr) {
     endTransmission(); //Let go of SPI port/bus
     return false;
   }
-  sclData.TEMP = DATA;
+  sclData.TEMP = SCL3300_DATA;
   transfer(RdAngY);
   if (crcerr || statuserr) {
     endTransmission(); //Let go of SPI port/bus
     return false;
   }
-  sclData.AngX = DATA;
+  sclData.AngX = SCL3300_DATA;
   transfer(RdAngZ);
   if (crcerr || statuserr) {
     endTransmission(); //Let go of SPI port/bus
     return false;
   }
-  sclData.AngY = DATA;
+  sclData.AngY = SCL3300_DATA;
   transfer(RdStatSum);
   if (crcerr || statuserr) {
     endTransmission(); //Let go of SPI port/bus
     return false;
   }
-  sclData.AngZ = DATA;
+  sclData.AngZ = SCL3300_DATA;
   transfer(RdWHOAMI);
   if (crcerr || statuserr) {
     endTransmission(); //Let go of SPI port/bus
     return false;
   }
-  sclData.StatusSum = DATA;
+  sclData.StatusSum = SCL3300_DATA;
   transfer(RdWHOAMI);
   if (crcerr || statuserr) {
     endTransmission(); //Let go of SPI port/bus
     return false;
   }
-  sclData.WHOAMI = DATA;
+  sclData.WHOAMI = SCL3300_DATA;
   endTransmission(); //Let go of SPI port/bus
   // The WHOAMI command should give an 8 bit value of 0xc1
-  return (DATA == 0xc1); //Let the caller know this worked
+  return (SCL3300_DATA == 0xc1); //Let the caller know this worked
 }
 
 //Return the calculated X axis tilt angle in degrees
@@ -253,8 +253,8 @@ uint16_t SCL3300::getErrFlag1(void) {
   transfer(RdErrFlg1);
   transfer(RdErrFlg1);
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return ((uint16_t)(CMD) & 0xff); //check CRC and RS bits
-  return DATA;
+  if (crcerr || statuserr) return ((uint16_t)(SCL3300_CMD) & 0xff); //check CRC and RS bits
+  return SCL3300_DATA;
 }
 
 //Return value of Error Flag 2 register
@@ -264,8 +264,8 @@ uint16_t SCL3300::getErrFlag2(void) {
   transfer(RdErrFlg2);
   transfer(RdErrFlg2);
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return ((uint16_t)(CMD) & 0xff); //check CRC and RS bits
-  return DATA;
+  if (crcerr || statuserr) return ((uint16_t)(SCL3300_CMD) & 0xff); //check CRC and RS bits
+  return SCL3300_DATA;
 }
 
 // Read the sensor Serial Number as created by the manufacturer
@@ -284,13 +284,13 @@ unsigned long SCL3300::getSerialNumber(void) {
     return 0;
   }
   transfer(RdSer2);
-  serialNum = DATA;
+  serialNum = SCL3300_DATA;
   if (crcerr || statuserr) {
     endTransmission(); //Let go of SPI port/bus
     return 0;
   }
   transfer(SwtchBnk0);
-  serialNum = (DATA << 16) | serialNum;
+  serialNum = (SCL3300_DATA << 16) | serialNum;
   endTransmission(); //Let go of SPI port/bus
   if (crcerr || statuserr) return 0;
   return serialNum;
@@ -303,7 +303,7 @@ uint16_t SCL3300::powerDownMode(void) {
   transfer(SwtchBnk0);
   transfer(SetPwrDwn);
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return (uint16_t)(CMD & 0xff); //check CRC and RS bits
+  if (crcerr || statuserr) return (uint16_t)(SCL3300_CMD & 0xff); //check CRC and RS bits
   return 0;
 }
 
@@ -313,7 +313,7 @@ uint16_t SCL3300::WakeMeUp(void) {
   beginTransmission(); //Set up this SPI port/bus
   transfer(WakeUp);
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return (uint16_t)(CMD & 0xff); //check CRC and RS bits
+  if (crcerr || statuserr) return (uint16_t)(SCL3300_CMD & 0xff); //check CRC and RS bits
   return 0;
 }
 
@@ -324,7 +324,7 @@ uint16_t SCL3300::reset(void) {
   transfer(SwtchBnk0);
   transfer(SWreset);
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return (uint16_t)(CMD & 0xff); //check CRC and RS bits
+  if (crcerr || statuserr) return (uint16_t)(SCL3300_CMD & 0xff); //check CRC and RS bits
   return 0;
 }
 
@@ -344,19 +344,19 @@ double SCL3300::getCalculatedTemperatureFarenheit(void) {
 }
 
 //Convert raw angle value to degrees tilt
-double SCL3300::angle(int16_t ANG) { //two's complement value expected
+double SCL3300::angle(int16_t SCL3300_ANG) { //two's complement value expected
   // Return Angle in degrees
-  double Angle = (ANG / 16384.) * 90.; // 16384 = 2^14
+  double Angle = (SCL3300_ANG / 16384.) * 90.; // 16384 = 2^14
   return Angle;
 }
  
  //Convert raw accelerometer value to g's of acceleration
-double SCL3300::acceleration(int16_t ACC) { //two's complement value expected
+double SCL3300::acceleration(int16_t SCL3300_ACC) { //two's complement value expected
   // Return acceleration in g
-  if (scl3300_mode == 1) return (double)ACC / 6000.;
-  if (scl3300_mode == 2) return (double)ACC / 3000.;
-  if (scl3300_mode == 3) return (double)ACC / 12000.;
-  if (scl3300_mode == 4) return (double)ACC / 12000.;
+  if (scl3300_mode == 1) return (double)SCL3300_ACC / 6000.;
+  if (scl3300_mode == 2) return (double)SCL3300_ACC / 3000.;
+  if (scl3300_mode == 3) return (double)SCL3300_ACC / 12000.;
+  if (scl3300_mode == 4) return (double)SCL3300_ACC / 12000.;
 }
 
 //private functions for serial transmission
@@ -394,28 +394,28 @@ uint8_t SCL3300::CalculateCRC(uint32_t Data)
 {
 uint8_t BitIndex;
 uint8_t BitValue;
-uint8_t CRC;
+uint8_t SCL3300_CRC;
 
-CRC = 0xFF;
+SCL3300_CRC = 0xFF;
 for (BitIndex = 31; BitIndex > 7; BitIndex--) {
   BitValue = (uint8_t)((Data >> BitIndex) & 0x01);
-  CRC = CRC8(BitValue, CRC);
+  SCL3300_CRC = CRC8(BitValue, SCL3300_CRC);
 }
-CRC = (uint8_t)~CRC;
-return CRC;
+SCL3300_CRC = (uint8_t)~SCL3300_CRC;
+return SCL3300_CRC;
 }
-uint8_t SCL3300::CRC8(uint8_t BitValue, uint8_t CRC)
+uint8_t SCL3300::CRC8(uint8_t BitValue, uint8_t SCL3300_CRC)
 {
   uint8_t Temp;
-  Temp = (uint8_t)(CRC & 0x80);
+  Temp = (uint8_t)(SCL3300_CRC & 0x80);
   if (BitValue == 0x01) {
     Temp ^= 0x80;
   }
-  CRC <<= 1;
+  SCL3300_CRC <<= 1;
   if (Temp > 0) {
-    CRC ^= 0x1D;
+    SCL3300_CRC ^= 0x1D;
   }
-  return CRC;
+  return SCL3300_CRC;
 }
 
 // Routine to transfer a 32-bit integer to the SCL3300, and return the 32-bit data read
@@ -437,13 +437,13 @@ unsigned long SCL3300::transfer(unsigned long value) {
   while (millis() - startmillis < 1) ;
   
   digitalWrite(scl3300_csPin, LOW); //Now chip select can be enabled for the full 32 bit xfer
-  DATA = 0;
+  SCL3300_DATA = 0;
   for (int i = 3; i >= 0; i--) { //Xfers are done MSB first
     dataorig.bit8[i] = SPI.transfer(dataorig.bit8[i]);
   }
-  DATA = dataorig.bit8[1] + (dataorig.bit8[2] << 8);
-  CRC = dataorig.bit8[0];
-  CMD = dataorig.bit8[3];
+  SCL3300_DATA = dataorig.bit8[1] + (dataorig.bit8[2] << 8);
+  SCL3300_CRC = dataorig.bit8[0];
+  SCL3300_CMD = dataorig.bit8[3];
   startmillis = millis();
   while (millis() - startmillis < 1) ;
   digitalWrite(scl3300_csPin, HIGH); //And we are done
@@ -454,21 +454,21 @@ unsigned long SCL3300::transfer(unsigned long value) {
   }
   Serial_SCL.print("  ");
   #endif
-  if (CRC == CalculateCRC(dataorig.bit32))
+  if (SCL3300_CRC == CalculateCRC(dataorig.bit32))
     crcerr = false;
   else
     crcerr = true;
   //check RS bits
-  if ((CMD && 0x03) == 0x01)
+  if ((SCL3300_CMD && 0x03) == 0x01)
     statuserr = false;
   else
     statuserr = true;
   #ifdef debug_scl3300
-  Serial_SCL.print((CMD & 0x03));
+  Serial_SCL.print((SCL3300_CMD & 0x03));
   Serial_SCL.print(" ");
-  Serial_SCL.print(DATA, HEX);
+  Serial_SCL.print(SCL3300_DATA, HEX);
   Serial_SCL.print(" ");
-  Serial_SCL.print(CRC, HEX);
+  Serial_SCL.print(SCL3300_CRC, HEX);
   Serial_SCL.print(" ");
   Serial_SCL.print(CalculateCRC(dataorig.bit32), HEX);
   Serial_SCL.print(" ");

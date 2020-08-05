@@ -2,7 +2,7 @@
 SCL3300.h
 SCL3300 Arduino Library Header File
 David Armstrong
-Version 2.1.2 - May 19, 2020
+Version 2.1.4 - August 4, 2020
 
 This file prototypes the SCL3300 class, as implemented in SCL3300.cpp
 
@@ -130,8 +130,8 @@ class SCL3300 {
     unsigned long getSerialNumber(void);
     double getCalculatedTemperatureCelsius(void);
     double getCalculatedTemperatureFarenheit(void);
-    double angle(int16_t ANG); //two's complement value expected
-    double acceleration(int16_t ACC);
+    double angle(int16_t SCL3300_ANG); //two's complement value expected
+    double acceleration(int16_t SCL3300_ACC);
     bool crcerr, statuserr;
     uint16_t powerDownMode(void);
     uint16_t WakeMeUp(void);
@@ -143,15 +143,15 @@ class SCL3300 {
 
     uint8_t scl3300_csPin = 10; // Default SPI chip select pin
     uint8_t scl3300_mode = 4; // Default inclinometer mode
-    uint8_t CMD, CRC;
-    uint16_t DATA;
+    uint8_t SCL3300_CMD, SCL3300_CRC;
+    uint16_t SCL3300_DATA;
     double Temperature, X_angle, Y_angle, Z_angle;
 	
     void initSPI();
     void beginTransmission();
     void endTransmission();
     uint8_t CalculateCRC(uint32_t Data);
-    uint8_t CRC8(uint8_t BitValue, uint8_t CRC);
+    uint8_t CRC8(uint8_t BitValue, uint8_t SCL3300_CRC);
     unsigned long transfer(unsigned long value);
 
     union FourByte {
