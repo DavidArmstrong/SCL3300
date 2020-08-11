@@ -1,5 +1,5 @@
 /* Read Temperature Sensor from Murata SCL3300 Inclinometer
- * Version 2.0.0 - February 22, 2020
+ * Version 3.0.0 - August 8, 2020
  * Example4_BasicTemperatureReading
 */
 
@@ -33,5 +33,5 @@ void loop() {
     Serial.print("Farenheit Temperature: ");
     Serial.println(inclinometer.getCalculatedTemperatureFarenheit());
     delay(250); //Allow a little time to see the output
-  }
+  } else inclinometer.reset();
 }
