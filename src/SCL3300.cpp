@@ -2,7 +2,7 @@
 SCL3300.cpp
 SCL3300 Arduino Driver
 David Armstrong
-Version 2.1.4 - August 4, 2020
+Version 3.0.0 - August 10, 2020
 https://github.com/DavidArmstrong/SCL3300
 
 Resources:
@@ -31,15 +31,16 @@ boolean SCL3300::setMode(int modeNum) {
     transfer(modeCMD[scl3300_mode]); //Set mode on hardware
     endTransmission(); //Let go of SPI port/bus
     if (crcerr || statuserr) {
-      return false;
-    } else return true; // Valid value
+	  reset(); //Reset chip to fix the error state
+      return false;  //Let the caller know something went wrong
+    } else return true; // Valid value, and chip was set to that mode
   } else
     return false; // Invalid value
 }
 
 // Current Version of begin() to initialize the library and the SCL3300
 boolean SCL3300::begin(void) {
-  //This is the updated Version 2 begin function
+  //This is the updated Version 3 begin function
   //Wait the required 10 ms before initializing the SCL3300 inclinomenter
   unsigned long startmillis = millis();
   while (millis() - startmillis < 10) ;
@@ -56,27 +57,16 @@ boolean SCL3300::begin(void) {
   transfer(RdStatSum);
   transfer(RdStatSum); //Again, due to off-response protocol used
   transfer(RdStatSum); //And now we can get the real status
-  if (statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
   
   //We're good, so Enable angle outputs
   transfer(EnaAngOut);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
   
   //Read the WHOAMI register
   transfer(RdWHOAMI);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
   //And again
   transfer(RdWHOAMI);
   endTransmission(); //Let go of SPI port/bus
+  //We now wait until the end of begin() to report if an error occurred
   if (crcerr || statuserr) return false;
   // Once everything is initialized, return a known expected value
   // The WHOAMI command should give an 8 bit value of 0xc1
@@ -84,6 +74,7 @@ boolean SCL3300::begin(void) {
 }
 
 // Set up the SPI communication with the SCL3300 with provided Chip Select pin number, and provided SPI port
+// This is NOT supported at this time
 boolean SCL3300::begin(SPIClass &spiPort, uint8_t csPin) {
   scl3300_csPin = csPin;
 
@@ -105,10 +96,6 @@ boolean SCL3300::isConnected() {
   transfer(SwtchBnk0);
   //Read the WHOAMI register
   transfer(RdWHOAMI);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
   //And again
   transfer(RdWHOAMI);
   endTransmission(); //Let go of SPI port/bus
@@ -121,76 +108,45 @@ boolean SCL3300::isConnected() {
 //Read all the sensor data together to keep it consistent
 //This is required according to the datasheet
 boolean SCL3300::available(void) {
-  //Version 2 of this function
+  //Version 3 of this function
+  boolean errorflag = false;
   //Read all Sensor Data, as per Datasheet requirements
   beginTransmission(); //Set up this SPI port/bus
   transfer(SwtchBnk0);
   transfer(RdAccX);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
+  if (crcerr || statuserr) errorflag = true;
   transfer(RdAccY);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
+  if (crcerr || statuserr) errorflag = true;
   sclData.AccX = SCL3300_DATA;
   transfer(RdAccZ);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
+  if (crcerr || statuserr) errorflag = true;
   sclData.AccY = SCL3300_DATA;
   transfer(RdSTO);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
+  if (crcerr || statuserr) errorflag = true;
   sclData.AccZ = SCL3300_DATA;
   transfer(RdTemp);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
+  if (crcerr || statuserr) errorflag = true;
   sclData.STO = SCL3300_DATA;
   transfer(RdAngX);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
+  if (crcerr || statuserr) errorflag = true;
   sclData.TEMP = SCL3300_DATA;
   transfer(RdAngY);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
+  if (crcerr || statuserr) errorflag = true;
   sclData.AngX = SCL3300_DATA;
   transfer(RdAngZ);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
+  if (crcerr || statuserr) errorflag = true;
   sclData.AngY = SCL3300_DATA;
   transfer(RdStatSum);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
+  if (crcerr || statuserr) errorflag = true;
   sclData.AngZ = SCL3300_DATA;
   transfer(RdWHOAMI);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
+  if (crcerr || statuserr) errorflag = true;
   sclData.StatusSum = SCL3300_DATA;
   transfer(RdWHOAMI);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return false;
-  }
+  if (crcerr || statuserr) errorflag = true;
   sclData.WHOAMI = SCL3300_DATA;
   endTransmission(); //Let go of SPI port/bus
+  if (errorflag) return false; //Inform caller that something went wrong
   // The WHOAMI command should give an 8 bit value of 0xc1
   return (SCL3300_DATA == 0xc1); //Let the caller know this worked
 }
@@ -253,7 +209,9 @@ uint16_t SCL3300::getErrFlag1(void) {
   transfer(RdErrFlg1);
   transfer(RdErrFlg1);
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return ((uint16_t)(SCL3300_CMD) & 0xff); //check CRC and RS bits
+  //Since we are fetching the Error Flag 1 value, we want to return what we got
+  //to the caller, regardless of whether or not there was an error
+  //if (crcerr || statuserr) return ((uint16_t)(SCL3300_CMD) & 0xff); //check CRC and RS bits
   return SCL3300_DATA;
 }
 
@@ -264,35 +222,31 @@ uint16_t SCL3300::getErrFlag2(void) {
   transfer(RdErrFlg2);
   transfer(RdErrFlg2);
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return ((uint16_t)(SCL3300_CMD) & 0xff); //check CRC and RS bits
+  //Since we are fetching the Error Flag 2 value, we want to return what we got
+  //to the caller, regardless of whether or not there was an error
+  //if (crcerr || statuserr) return ((uint16_t)(SCL3300_CMD) & 0xff); //check CRC and RS bits
   return SCL3300_DATA;
 }
 
 // Read the sensor Serial Number as created by the manufacturer
 unsigned long SCL3300::getSerialNumber(void) {
   //Return Device Serial number
+  boolean errorflag = false;
   unsigned long serialNum = 0;
   beginTransmission(); //Set up this SPI port/bus
   transfer(SwtchBnk1);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return 0;
-  }
+  if (crcerr || statuserr) errorflag = true;
   transfer(RdSer1);
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return 0;
-  }
+  if (crcerr || statuserr) errorflag = true;
   transfer(RdSer2);
   serialNum = SCL3300_DATA;
-  if (crcerr || statuserr) {
-    endTransmission(); //Let go of SPI port/bus
-    return 0;
-  }
+  if (crcerr || statuserr) errorflag = true;
   transfer(SwtchBnk0);
   serialNum = (SCL3300_DATA << 16) | serialNum;
   endTransmission(); //Let go of SPI port/bus
-  if (crcerr || statuserr) return 0;
+  //We wait until now to return an error code
+  //In this case we send a 0 since a real serial number will never be 0
+  if (crcerr || statuserr || errorflag) return 0;
   return serialNum;
 }
 
@@ -303,6 +257,7 @@ uint16_t SCL3300::powerDownMode(void) {
   transfer(SwtchBnk0);
   transfer(SetPwrDwn);
   endTransmission(); //Let go of SPI port/bus
+  //Since an error is non-zero, we will return 0 if there was no error
   if (crcerr || statuserr) return (uint16_t)(SCL3300_CMD & 0xff); //check CRC and RS bits
   return 0;
 }
@@ -313,6 +268,7 @@ uint16_t SCL3300::WakeMeUp(void) {
   beginTransmission(); //Set up this SPI port/bus
   transfer(WakeUp);
   endTransmission(); //Let go of SPI port/bus
+  //Since an error is non-zero, we will return 0 if there was no error
   if (crcerr || statuserr) return (uint16_t)(SCL3300_CMD & 0xff); //check CRC and RS bits
   return 0;
 }
@@ -324,6 +280,9 @@ uint16_t SCL3300::reset(void) {
   transfer(SwtchBnk0);
   transfer(SWreset);
   endTransmission(); //Let go of SPI port/bus
+  //we have to call begin() again to set up the SCL3300 back to the same state as before it was reset
+  begin(); //Re-init chip
+  //Since an error is non-zero, we will return 0 if there was no error
   if (crcerr || statuserr) return (uint16_t)(SCL3300_CMD & 0xff); //check CRC and RS bits
   return 0;
 }
@@ -459,7 +418,7 @@ unsigned long SCL3300::transfer(unsigned long value) {
   else
     crcerr = true;
   //check RS bits
-  if ((SCL3300_CMD && 0x03) == 0x01)
+  if ((SCL3300_CMD & 0x03) == 0x01)
     statuserr = false;
   else
     statuserr = true;

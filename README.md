@@ -3,7 +3,7 @@
 
 Arduino Library for Murata SCL3300 Inclinometer
 
-  Version 2.1.4 - August 4, 2020
+  Version 3.0.0 - August 10, 2020
 
   By David Armstrong
   https://github.com/DavidArmstrong/Arduino-SCL3300
@@ -20,6 +20,7 @@ Notes:
   1) The SCL3300 inclinometer will require a bidrectional level shifter to interface the SPI pins to 5 volt devices, such as the Arduino Uno.
   2) A pull-up resistor may be required on the Chip/Slave Select line of the SCL3300.  A typical resistor value of 4.7k ohms should connect this pin to +3.3 volts.
   3) Be sure to connect the SCL3300 DVIO pin to +3.3 volts as well.  This pin powers the digital pins.
+  4) There is a small, but significant, library change starting with Version 3.0.0.  This requires a one-line addition to any older sketches when using this updated SCL3300 library.  All the example sketches have been updated to include the addtional code.  (The backwards incompatibility is due to the improved error detection and handling design.)
 
 For an Arduino Uno, the default SPI pins are as follows:
 SCK - Digital Pin 13
@@ -39,7 +40,7 @@ begin(csPinNum) -- This variation allows you to choose a different pin as the SP
 
 isConnected()   -- Returns 'true' if the sensor is still responding as expected, and able to provide valid data.
 
-available()     -- Reads the raw SCL3300 sensor data as a group so that all the data is consistent.  Call this first before using the functions below.
+available()     -- Reads the raw SCL3300 sensor data as a group so that all the data is consistent.  Call this first before using the functions below.  Starting with Version 3.0.0, this call should be the conditional in an 'if' statement, and an 'else' clause included to call reset() when available() returns false.  (See the example sketches in the library.)
 
 getTiltLevelOffsetAngleX() -- Returns a double float of the tilt offset from level value in degrees for the X direction.
 

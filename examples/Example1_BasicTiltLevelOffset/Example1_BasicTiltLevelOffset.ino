@@ -1,5 +1,5 @@
 /* Read Tilt angles from Murata SCL3300 Inclinometer
- * Version 2.1.0 - February 29, 2020
+ * Version 3.0.0 - August 8, 2020
  * Example1_BasicTiltLevelOffset
 */
 
@@ -36,5 +36,5 @@ void loop() {
     Serial.print("Z Tilt: ");
     Serial.println(inclinometer.getTiltLevelOffsetAngleZ());
     delay(100); //Allow a little time to see the output
-  }
+  } else inclinometer.reset();
 }

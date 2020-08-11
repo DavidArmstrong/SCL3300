@@ -1,5 +1,5 @@
 /* Read Accelerometer data from Murata SCL3300 Inclinometer
- * Version 2.0.0 - February 22, 2020
+ * Version 3.0.0 - August 8, 2020
  * Example3_BasicAccelerometerReading
 */
 
@@ -36,5 +36,5 @@ void loop() {
     Serial.print("Z Accelerometer: ");
     Serial.println(inclinometer.getCalculatedAccelerometerZ());
     delay(250); //Allow a little time to see the output
-  }
+  } else inclinometer.reset();
 }

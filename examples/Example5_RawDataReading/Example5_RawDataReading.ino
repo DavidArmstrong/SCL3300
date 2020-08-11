@@ -1,5 +1,5 @@
 /* Read Raw sensor data from Murata SCL3300 Inclinometer
- * Version 2.1.1 - March 3, 2020
+ * Version 3.0.0 - August 8, 2020
  * Example5_RawDataReading
 */
 
@@ -27,6 +27,7 @@ void setup() {
 
 void loop() {
   if (inclinometer.isConnected()) Serial.println("Inclinometer is still alive...");
+  else Serial.println("Inclinometer error detected...");
   
   if (inclinometer.available()) { //Get next block of data from sensor
     Serial.print("Raw X Tilt: ");
@@ -59,5 +60,5 @@ void loop() {
     Serial.print("SL3300 Status Summary Register: ");
     Serial.println(inclinometer.sclData.StatusSum, HEX);
     delay(1000);
-  }
+  } else inclinometer.reset();
 }
