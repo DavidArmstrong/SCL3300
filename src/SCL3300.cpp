@@ -2,14 +2,14 @@
 SCL3300.cpp
 SCL3300 Arduino Driver
 David Armstrong
-Version 3.0.0 - August 10, 2020
+Version 3.0.1 - September 24, 2020
 https://github.com/DavidArmstrong/SCL3300
 
 Resources:
 Uses SPI.h for SPI operation
 
 Development environment specifics:
-Arduino IDE 1.8.9, 1.8.11, and 1.8.12
+Arduino IDE 1.8.9, 1.8.11, 1.8.12, and 1.8.13
 Teensy loader - untested
 
 This code is released under the [MIT License](http://opensource.org/licenses/MIT).
@@ -242,7 +242,7 @@ unsigned long SCL3300::getSerialNumber(void) {
   serialNum = SCL3300_DATA;
   if (crcerr || statuserr) errorflag = true;
   transfer(SwtchBnk0);
-  serialNum = (SCL3300_DATA << 16) | serialNum;
+  serialNum = ((unsigned long)SCL3300_DATA << 16) | serialNum;
   endTransmission(); //Let go of SPI port/bus
   //We wait until now to return an error code
   //In this case we send a 0 since a real serial number will never be 0
