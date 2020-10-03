@@ -331,7 +331,7 @@ void SCL3300::endTransmission() {
   SPI.endTransaction();
   unsigned long startmillis = millis();
   while (millis() - startmillis < 1) ; //wait a bit
-} //beginTransmission
+} //endTransmission
 
 //Initialize the Arduino SPI library for the SCL3300 hardware
 void SCL3300::initSPI() {
