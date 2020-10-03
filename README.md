@@ -3,7 +3,7 @@
 
 Arduino Library for Murata SCL3300 Inclinometer
 
-  Version 3.0.1 - September 24, 2020
+  Version 3.0.2 - October 3, 2020
 
   By David Armstrong
   https://github.com/DavidArmstrong/Arduino-SCL3300
@@ -23,19 +23,23 @@ Notes:
   4) There is a small, but significant, library change starting with Version 3.0.0.  This requires a one-line addition to any older sketches when using this updated SCL3300 library.  All the example sketches have been updated to include the addtional code.  (The backwards incompatibility is due to the improved error detection and handling design.)
 
 For an Arduino Uno, the default SPI pins are as follows:
-SCK - Digital Pin 13
-SDO - Digital Pin 12 (MISO)
-SDI - Digital Pin 11 (MOSI)
-CS  - Digital Pin 10 (SS)
+  SCK - Digital Pin 13
+  SDO - Digital Pin 12 (MISO)
+  SDI - Digital Pin 11 (MOSI)
+  CS  - Digital Pin 10 (SS)
 
 For a SAMD-type Arduino, such as the Sparkfun Redboard Turbo or Arduino Zero, the default SPI pins are only available on the ICSP connector:
-pins 22 (MISO), 23 (MOSI), and 24 (SCK) are on ICSP header, and for Chip/Slave Select uses digital Pin 10 as the default.
+  pin 22 (MISO)
+  pin 23 (MOSI)
+  pin 24 (SCK)
+  Chip/Slave Select uses digital Pin 10 as the default.
 
 ======================================
 
 Basic SCL3300 Library Functions:
 
 begin()         -- This initializes the library and the SPI chip, and by default assigns the SPI Chip Select Pin to Digital Pin 10.
+
 begin(csPinNum) -- This variation allows you to choose a different pin as the SPI Chip Select Pin.  Replace 'csPinNum' with your pin number.
 
 isConnected()   -- Returns 'true' if the sensor is still responding as expected, and able to provide valid data.
@@ -65,7 +69,7 @@ getTemperatureFarenheit() -- Returns a double float of the temperature in Farenh
 
 Utility Functions available:
 
-reset()           -- Does a hardware reset of the SCL3300 sensor.
+reset()           -- Does a software reset of the SCL3300 sensor.
 
 getSerialNumber() -- Returns a long integer of the device Serial Number set by the manufacturer.
 
