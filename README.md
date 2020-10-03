@@ -23,16 +23,16 @@ Notes:
   4) There is a small, but significant, library change starting with Version 3.0.0.  This requires a one-line addition to any older sketches when using this updated SCL3300 library.  All the example sketches have been updated to include the addtional code.  (The backwards incompatibility is due to the improved error detection and handling design.)
 
 For an Arduino Uno, the default SPI pins are as follows:
-  SCK - Digital Pin 13
-  SDO - Digital Pin 12 (MISO)
-  SDI - Digital Pin 11 (MOSI)
-  CS  - Digital Pin 10 (SS)
+  * SCK - Digital Pin 13
+  * SDO - Digital Pin 12 (MISO)
+  * SDI - Digital Pin 11 (MOSI)
+  * CS  - Digital Pin 10 (SS)
 
 For a SAMD-type Arduino, such as the Sparkfun Redboard Turbo or Arduino Zero, the default SPI pins are only available on the ICSP connector:
-  pin 22 (MISO)
-  pin 23 (MOSI)
-  pin 24 (SCK)
-  Chip/Slave Select uses digital Pin 10 as the default.
+  * pin 22 (MISO)
+  * pin 23 (MOSI)
+  * pin 24 (SCK)
+  * Chip/Slave Select uses digital Pin 10 as the default.
 
 ======================================
 
