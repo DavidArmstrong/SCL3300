@@ -17,6 +17,7 @@ reset	KEYWORD2
 setMode	KEYWORD2
 isConnected	KEYWORD2
 available	KEYWORD2
+SetFastReadMode	KEYWORD2
 getCalculatedAngleX	KEYWORD2
 getCalculatedAngleY	KEYWORD2
 getCalculatedAngleZ	KEYWORD2
