@@ -2,23 +2,20 @@
 SCL3300.h
 SCL3300 Arduino Library Header File
 David Armstrong
-Version 2.1.4 - August 4, 2020
-
-This file prototypes the SCL3300 class, as implemented in SCL3300.cpp
+Version 3.1.0 - July 28, 2021
+https://github.com/DavidArmstrong/SCL3300
 
 Resources:
 Uses SPI.h for SPI operation
 
 Development environment specifics:
-Arduino IDE 1.8.9, 1.8.11, and 1.8.12
-Teensy loader - untested
+Arduino IDE 1.8.9, 1.8.11, 1.8.12, 1.8.13, 1.8.15
 
 This code is released under the [MIT License](http://opensource.org/licenses/MIT).
 Please review the LICENSE.md file included with this example.
 Distributed as-is; no warranty is given.
 
-TODO:
-  Test with Teensy
+This file prototypes the SCL3300 class, as implemented in SCL3300.cpp
 
 ******************************************************************************/
 
@@ -26,7 +23,7 @@ TODO:
 #ifndef __SCL3300_h
 #define __SCL3300_h
 
-//Uncomment the following line for debugging output
+// Uncomment the following line for debugging output
 //#define debug_scl3300
 
 // Need the following define for SAMD processors
@@ -48,9 +45,9 @@ TODO:
 
 #ifndef SCL3300_SPI_CLOCK
 #ifdef ARDUINO_ARCH_ESP32
-#define SCL3300_SPI_CLOCK 2000000
+#define SCL3300_SPI_CLOCK 4000000
 #else
-#define SCL3300_SPI_CLOCK 2000000
+#define SCL3300_SPI_CLOCK 4000000
 #endif
 #endif
 
@@ -116,6 +113,7 @@ class SCL3300 {
     //Functions to retrieve sensor data
     boolean isConnected();
     boolean available(void);
+    void setFastReadMode();
     double getCalculatedAngleX(void);
     double getCalculatedAngleY(void);
     double getCalculatedAngleZ(void);
@@ -146,6 +144,7 @@ class SCL3300 {
     uint8_t SCL3300_CMD, SCL3300_CRC;
     uint16_t SCL3300_DATA;
     double Temperature, X_angle, Y_angle, Z_angle;
+    bool setFastRead = false;
 	
     void initSPI();
     void beginTransmission();

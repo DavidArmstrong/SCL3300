@@ -3,7 +3,7 @@
 
 Arduino Library for Murata SCL3300 Inclinometer
 
-  Version 3.0.2 - October 3, 2020
+  Version 3.1.0 - July 28, 2021
 
   By David Armstrong
   https://github.com/DavidArmstrong/Arduino-SCL3300
@@ -59,7 +59,9 @@ getCalculatedAngleY() -- Returns a double float of the tilt value in degrees (0-
 getCalculatedAngleZ() -- Returns a double float of the tilt value in degrees (0-360) for the Z direction.
 
 getCalculatedAccelerometerX() -- Returns a double float of the accelerometer value in units of 'g' for the X direction.
+
 getCalculatedAccelerometerY() -- Returns a double float of the accelerometer value in units of 'g' for the Y direction.
+
 getCalculatedAccelerometerZ() -- Returns a double float of the accelerometer value in units of 'g' for the Z direction.
 
 getTemperatureCelsius()   -- Returns a double float of the temperature in Celsius.
@@ -78,3 +80,5 @@ powerDownMode()   -- Puts the sensor in a power down mode to reduce power usage.
 WakeMeUp()        -- Revives sensor from being powered down, so that it can start to generate sensor data.
 
 setMode(modeNum) -- Sets the sensor mode to the number provided as modeNum.  The default mode is '4'.  Valid values are 1, 2, 3, and 4.
+
+SetFastReadMode() -- Using Fast Read Mode in the library works by keeping the SPI connection continuously open.  This may or may not affect the behavior of other hardware interactions, depending on the sketch design.  Fast Read Mode is considered an advanced use case, and not recommended for the beginner.

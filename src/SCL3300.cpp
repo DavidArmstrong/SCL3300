@@ -2,19 +2,19 @@
 SCL3300.cpp
 SCL3300 Arduino Driver
 David Armstrong
-Version 3.0.1 - September 24, 2020
+Version 3.1.0 - July 28, 2021
 https://github.com/DavidArmstrong/SCL3300
 
 Resources:
 Uses SPI.h for SPI operation
 
 Development environment specifics:
-Arduino IDE 1.8.9, 1.8.11, 1.8.12, and 1.8.13
-Teensy loader - untested
+Arduino IDE 1.8.9, 1.8.11, 1.8.12, 1.8.13, 1.8.15
 
 This code is released under the [MIT License](http://opensource.org/licenses/MIT).
 Please review the LICENSE.md file included with this example.
 Distributed as-is; no warranty is given.
+
 ******************************************************************************/
 
 // include this library's description file
@@ -27,9 +27,9 @@ boolean SCL3300::setMode(int modeNum) {
   // Only allowed values are: 1,2,3,4
   if (modeNum > 0 && modeNum < 5) {
     scl3300_mode = modeNum;
-    beginTransmission(); //Set up this SPI port/bus
+    if (!setFastRead) beginTransmission(); //Set up this SPI port/bus
     transfer(modeCMD[scl3300_mode]); //Set mode on hardware
-    endTransmission(); //Let go of SPI port/bus
+    if (!setFastRead) endTransmission(); //Let go of SPI port/bus
     if (crcerr || statuserr) {
 	  reset(); //Reset chip to fix the error state
       return false;  //Let the caller know something went wrong
@@ -41,31 +41,36 @@ boolean SCL3300::setMode(int modeNum) {
 // Current Version of begin() to initialize the library and the SCL3300
 boolean SCL3300::begin(void) {
   //This is the updated Version 3 begin function
-  //Wait the required 10 ms before initializing the SCL3300 inclinomenter
+  //Wait the required 1 ms before initializing the SCL3300 inclinomenter
   unsigned long startmillis = millis();
-  while (millis() - startmillis < 10) ;
+  while (millis() - startmillis < 1) ;
+  
   initSPI();	// Initialize SPI Library
-  beginTransmission(); //Set up this SPI port/bus
-
+  if (!setFastRead) beginTransmission(); //Set up this SPI port/bus
+  //Write SW Reset command
+  transfer(SwtchBnk0);
+  transfer(SWreset);
+  startmillis = millis();
+  while (millis() - startmillis < 1) ;
+  //Set measurement mode
   transfer(modeCMD[scl3300_mode]); //Set mode on hardware
+  //We're good, so Enable angle outputs
+  transfer(EnaAngOut);
   //The first response after reset is undefined and shall be discarded
   //wait 5 ms to stablize
   startmillis = millis();
-  while (millis() - startmillis < 5) ;
+  while (millis() - startmillis < 100) ;
 
   //Read Status to clear the status summary
   transfer(RdStatSum);
   transfer(RdStatSum); //Again, due to off-response protocol used
   transfer(RdStatSum); //And now we can get the real status
   
-  //We're good, so Enable angle outputs
-  transfer(EnaAngOut);
-  
   //Read the WHOAMI register
   transfer(RdWHOAMI);
   //And again
   transfer(RdWHOAMI);
-  endTransmission(); //Let go of SPI port/bus
+  if (!setFastRead) endTransmission(); //Let go of SPI port/bus
   //We now wait until the end of begin() to report if an error occurred
   if (crcerr || statuserr) return false;
   // Once everything is initialized, return a known expected value
@@ -92,13 +97,13 @@ boolean SCL3300::begin(uint8_t csPin) {
 
 //Check to validate that the sensor is still reachable and ready to provide data
 boolean SCL3300::isConnected() {
-  beginTransmission(); //Set up this SPI port/bus
+  if (!setFastRead) beginTransmission(); //Set up this SPI port/bus
   transfer(SwtchBnk0);
   //Read the WHOAMI register
   transfer(RdWHOAMI);
   //And again
   transfer(RdWHOAMI);
-  endTransmission(); //Let go of SPI port/bus
+  if (!setFastRead) endTransmission(); //Let go of SPI port/bus
   if (crcerr || statuserr) return false;
   // Once everything is initialized, return a known expected value
   // The WHOAMI command should give an 8 bit value of 0xc1
@@ -111,7 +116,7 @@ boolean SCL3300::available(void) {
   //Version 3 of this function
   boolean errorflag = false;
   //Read all Sensor Data, as per Datasheet requirements
-  beginTransmission(); //Set up this SPI port/bus
+  if (!setFastRead) beginTransmission(); //Set up this SPI port/bus
   transfer(SwtchBnk0);
   transfer(RdAccX);
   if (crcerr || statuserr) errorflag = true;
@@ -145,10 +150,23 @@ boolean SCL3300::available(void) {
   transfer(RdWHOAMI);
   if (crcerr || statuserr) errorflag = true;
   sclData.WHOAMI = SCL3300_DATA;
-  endTransmission(); //Let go of SPI port/bus
+  if (!setFastRead) endTransmission(); //Let go of SPI port/bus
   if (errorflag) return false; //Inform caller that something went wrong
   // The WHOAMI command should give an 8 bit value of 0xc1
   return (SCL3300_DATA == 0xc1); //Let the caller know this worked
+}
+
+/* Set SCL3300 library into Fast Read Mode
+ * Warning: Using Fast Read Mode in the library works by keeping the
+ *          SPI connection continuously open.  This may or may not affect
+ *          the behavior of other hardware interactions, depending on the
+ *          sketch design.  Fast Read Mode is considered an advanced use case,
+ *          and not recommended for the beginner.
+*/
+void SCL3300::setFastReadMode() {
+  setFastRead = true;
+  beginTransmission(); //Set up this SPI port/bus
+  begin(); //Re-init chip
 }
 
 //Return the calculated X axis tilt angle in degrees
@@ -204,11 +222,11 @@ double SCL3300::getCalculatedAccelerometerZ(void) {
 
 //Return value of Error Flag 1 register
 uint16_t SCL3300::getErrFlag1(void) {
-  beginTransmission(); //Set up this SPI port/bus
+  if (!setFastRead) beginTransmission(); //Set up this SPI port/bus
   transfer(SwtchBnk0);
   transfer(RdErrFlg1);
   transfer(RdErrFlg1);
-  endTransmission(); //Let go of SPI port/bus
+  if (!setFastRead) endTransmission(); //Let go of SPI port/bus
   //Since we are fetching the Error Flag 1 value, we want to return what we got
   //to the caller, regardless of whether or not there was an error
   //if (crcerr || statuserr) return ((uint16_t)(SCL3300_CMD) & 0xff); //check CRC and RS bits
@@ -217,11 +235,11 @@ uint16_t SCL3300::getErrFlag1(void) {
 
 //Return value of Error Flag 2 register
 uint16_t SCL3300::getErrFlag2(void) {
-  beginTransmission(); //Set up this SPI port/bus
+  if (!setFastRead) beginTransmission(); //Set up this SPI port/bus
   transfer(SwtchBnk0);
   transfer(RdErrFlg2);
   transfer(RdErrFlg2);
-  endTransmission(); //Let go of SPI port/bus
+  if (!setFastRead) endTransmission(); //Let go of SPI port/bus
   //Since we are fetching the Error Flag 2 value, we want to return what we got
   //to the caller, regardless of whether or not there was an error
   //if (crcerr || statuserr) return ((uint16_t)(SCL3300_CMD) & 0xff); //check CRC and RS bits
@@ -233,7 +251,7 @@ unsigned long SCL3300::getSerialNumber(void) {
   //Return Device Serial number
   boolean errorflag = false;
   unsigned long serialNum = 0;
-  beginTransmission(); //Set up this SPI port/bus
+  if (!setFastRead) beginTransmission(); //Set up this SPI port/bus
   transfer(SwtchBnk1);
   if (crcerr || statuserr) errorflag = true;
   transfer(RdSer1);
@@ -243,7 +261,7 @@ unsigned long SCL3300::getSerialNumber(void) {
   if (crcerr || statuserr) errorflag = true;
   transfer(SwtchBnk0);
   serialNum = ((unsigned long)SCL3300_DATA << 16) | serialNum;
-  endTransmission(); //Let go of SPI port/bus
+  if (!setFastRead) endTransmission(); //Let go of SPI port/bus
   //We wait until now to return an error code
   //In this case we send a 0 since a real serial number will never be 0
   if (crcerr || statuserr || errorflag) return 0;
@@ -253,7 +271,7 @@ unsigned long SCL3300::getSerialNumber(void) {
 // Place the sensor in a Powered Down mode to save power
 uint16_t SCL3300::powerDownMode(void) {
   //Software power down of sensor
-  beginTransmission(); //Set up this SPI port/bus
+  if (!setFastRead) beginTransmission(); //Set up this SPI port/bus
   transfer(SwtchBnk0);
   transfer(SetPwrDwn);
   endTransmission(); //Let go of SPI port/bus
@@ -267,7 +285,7 @@ uint16_t SCL3300::WakeMeUp(void) {
   //Software Wake Up of sensor
   beginTransmission(); //Set up this SPI port/bus
   transfer(WakeUp);
-  endTransmission(); //Let go of SPI port/bus
+  if (!setFastRead) endTransmission(); //Let go of SPI port/bus
   //Since an error is non-zero, we will return 0 if there was no error
   if (crcerr || statuserr) return (uint16_t)(SCL3300_CMD & 0xff); //check CRC and RS bits
   return 0;
@@ -276,11 +294,11 @@ uint16_t SCL3300::WakeMeUp(void) {
 // Hardware reset of the sensor electronics
 uint16_t SCL3300::reset(void) {
   //Software reset of sensor
-  beginTransmission(); //Set up this SPI port/bus
-  transfer(SwtchBnk0);
-  transfer(SWreset);
-  endTransmission(); //Let go of SPI port/bus
-  //we have to call begin() again to set up the SCL3300 back to the same state as before it was reset
+  //beginTransmission(); //Set up this SPI port/bus
+  //transfer(SwtchBnk0);
+  //transfer(SWreset);
+  //endTransmission(); //Let go of SPI port/bus
+  //we have to call begin() to set up the SCL3300 to the same state as before it was reset
   begin(); //Re-init chip
   //Since an error is non-zero, we will return 0 if there was no error
   if (crcerr || statuserr) return (uint16_t)(SCL3300_CMD & 0xff); //check CRC and RS bits
@@ -380,6 +398,8 @@ uint8_t SCL3300::CRC8(uint8_t BitValue, uint8_t SCL3300_CRC)
 // Routine to transfer a 32-bit integer to the SCL3300, and return the 32-bit data read
 unsigned long SCL3300::transfer(unsigned long value) {
   FourByte dataorig;
+  unsigned long startmicros;
+  
   dataorig.bit32 = value; //Allow 32 bit value to be sent 8 bits at a time
   #ifdef debug_scl3300
   Serial_SCL.print(dataorig.bit32, HEX);
@@ -391,9 +411,9 @@ unsigned long SCL3300::transfer(unsigned long value) {
   #endif
   //Must allow at least 10 uSec between SPI transfers
   //The datasheet shows the CS line must be high during this time
-  //We lengthen it some for environment variabilities
-  unsigned long startmillis = millis();
-  while (millis() - startmillis < 1) ;
+  if (!setFastRead) startmicros = micros();
+  //while ((micros() - startmicros < 10) && (micros() > 10)) ;
+  if (!setFastRead) while ((micros() - startmicros < 10)) ;
   
   digitalWrite(scl3300_csPin, LOW); //Now chip select can be enabled for the full 32 bit xfer
   SCL3300_DATA = 0;
@@ -403,8 +423,6 @@ unsigned long SCL3300::transfer(unsigned long value) {
   SCL3300_DATA = dataorig.bit8[1] + (dataorig.bit8[2] << 8);
   SCL3300_CRC = dataorig.bit8[0];
   SCL3300_CMD = dataorig.bit8[3];
-  startmillis = millis();
-  while (millis() - startmillis < 1) ;
   digitalWrite(scl3300_csPin, HIGH); //And we are done
   #ifdef debug_scl3300
   for (int i = 3; i >= 0; i--) {
