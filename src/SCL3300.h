@@ -2,7 +2,7 @@
 SCL3300.h
 SCL3300 Arduino Library Header File
 David Armstrong
-Version 3.1.0 - July 28, 2021
+Version 3.2.0 - September 3, 2021
 https://github.com/DavidArmstrong/SCL3300
 
 Resources:
@@ -27,10 +27,10 @@ This file prototypes the SCL3300 class, as implemented in SCL3300.cpp
 //#define debug_scl3300
 
 // Need the following define for SAMD processors
-#if defined (ARDUINO_ARCH_SAMD)
-#define Serial_SCL SerialUSB
+#if defined(ARDUINO_SAMD_ZERO) && defined(SERIAL_PORT_USBVIRTUAL)
+  #define Serial_SCL SERIAL_PORT_USBVIRTUAL
 #else
-#define Serial_SCL Serial
+  #define Serial_SCL Serial
 #endif
 
 #include <stdint.h>
@@ -114,6 +114,7 @@ class SCL3300 {
     boolean isConnected();
     boolean available(void);
     void setFastReadMode();
+	void stopFastReadMode();
     double getCalculatedAngleX(void);
     double getCalculatedAngleY(void);
     double getCalculatedAngleZ(void);

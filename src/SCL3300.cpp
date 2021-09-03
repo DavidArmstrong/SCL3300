@@ -2,7 +2,7 @@
 SCL3300.cpp
 SCL3300 Arduino Driver
 David Armstrong
-Version 3.1.0 - July 28, 2021
+Version 3.2.0 - September 3, 2021
 https://github.com/DavidArmstrong/SCL3300
 
 Resources:
@@ -166,6 +166,19 @@ boolean SCL3300::available(void) {
 void SCL3300::setFastReadMode() {
   setFastRead = true;
   beginTransmission(); //Set up this SPI port/bus
+  begin(); //Re-init chip
+}
+
+/* Stop Fast Read Mode
+ * Warning: Using Fast Read Mode in the library works by keeping the
+ *          SPI connection continuously open.  This may or may not affect
+ *          the behavior of other hardware interactions, depending on the
+ *          sketch design.  Fast Read Mode is considered an advanced use case,
+ *          and not recommended for the beginner.
+*/
+void SCL3300::stopFastReadMode() {
+  setFastRead = false;
+  endTransmission();  //Close connection to SPI port/bus
   begin(); //Re-init chip
 }
 
@@ -334,6 +347,7 @@ double SCL3300::acceleration(int16_t SCL3300_ACC) { //two's complement value exp
   if (scl3300_mode == 2) return (double)SCL3300_ACC / 3000.;
   if (scl3300_mode == 3) return (double)SCL3300_ACC / 12000.;
   if (scl3300_mode == 4) return (double)SCL3300_ACC / 12000.;
+  return (double)SCL3300_ACC / 12000.; //Default should never be reached
 }
 
 //private functions for serial transmission

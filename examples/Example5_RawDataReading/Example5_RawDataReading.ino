@@ -10,8 +10,8 @@ SCL3300 inclinometer;
 //Default SPI chip/slave select pin is D10
 
 // Need the following define for SAMD processors
-#if defined (ARDUINO_ARCH_SAMD)
-#define Serial SerialUSB
+#if defined(ARDUINO_SAMD_ZERO) && defined(SERIAL_PORT_USBVIRTUAL)
+  #define Serial SERIAL_PORT_USBVIRTUAL
 #endif
 
 void setup() {

@@ -1,6 +1,6 @@
 /* Fast Read Sensor Mode for Murata SCL3300 Inclinometer
  * Version 3.2.0 - September 3, 2021
- * Example6_FastReadMode
+ * Example7_FastReadModeContinuous
  * Warning: Using Fast Read Mode in the library works by keeping the
  *          SPI connection continuously open.  This may or may not affect
  *          the behavior of other hardware interactions, depending on the
@@ -15,8 +15,8 @@ SCL3300 inclinometer;
 //Default SPI chip/slave select pin is D10
 
 // Need the following define for SAMD processors
-#if defined(ARDUINO_SAMD_ZERO) && defined(SERIAL_PORT_USBVIRTUAL)
-  #define Serial SERIAL_PORT_USBVIRTUAL
+#if defined (ARDUINO_ARCH_SAMD)
+#define Serial SerialUSB
 #endif
 
 int16_t AngX, AngY, AngZ, AccX, AccY, AccZ, STO, TEMP;
@@ -28,17 +28,17 @@ void setup() {
   Serial.begin(9600);
   delay(2000); //SAMD boards may need a long time to init SerialUSB
   Serial.println("Reading Raw register values from SCL3300 Inclinometer");
-  Serial.println("We use FastReadMode in 1 second bursts.");
+  Serial.println("We use FastReadMode continuously.");
   if (inclinometer.begin() == false) {
     Serial.println("Murata SCL3300 inclinometer not connected.");
     while(1); //Freeze
   }
+  inclinometer.setFastReadMode();
 }
 
 void loop() {
-  n = 0;
-  inclinometer.setFastReadMode();
   startmillis = millis();
+  n = 0;
   while (millis() - startmillis < 1000) {
     if (inclinometer.available()) { //Get next block of data from sensor
       n++;
@@ -55,7 +55,6 @@ void loop() {
       StatusSum = inclinometer.sclData.StatusSum;
     } else inclinometer.reset();
   }
-  inclinometer.stopFastReadMode();
   Serial.print("Iterations per second: ");
   Serial.println(n);
 }
