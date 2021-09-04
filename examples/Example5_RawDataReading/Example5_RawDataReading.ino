@@ -1,5 +1,5 @@
 /* Read Raw sensor data from Murata SCL3300 Inclinometer
- * Version 3.0.0 - August 8, 2020
+ * Version 3.2.0 - September 3, 2021
  * Example5_RawDataReading
 */
 
