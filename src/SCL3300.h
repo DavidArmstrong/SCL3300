@@ -114,7 +114,7 @@ class SCL3300 {
     boolean isConnected();
     boolean available(void);
     void setFastReadMode();
-	void stopFastReadMode();
+    void stopFastReadMode();
     double getCalculatedAngleX(void);
     double getCalculatedAngleY(void);
     double getCalculatedAngleZ(void);
