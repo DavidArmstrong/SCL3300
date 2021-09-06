@@ -3,7 +3,7 @@
 
 Arduino Library for Murata SCL3300 Inclinometer
 
-  Version 3.1.0 - July 28, 2021
+  Version 3.2.0 - September 3, 2021
 
   By David Armstrong
   https://github.com/DavidArmstrong/Arduino-SCL3300
@@ -81,4 +81,6 @@ WakeMeUp()        -- Revives sensor from being powered down, so that it can star
 
 setMode(modeNum) -- Sets the sensor mode to the number provided as modeNum.  The default mode is '4'.  Valid values are 1, 2, 3, and 4.
 
-SetFastReadMode() -- Using Fast Read Mode in the library works by keeping the SPI connection continuously open.  This may or may not affect the behavior of other hardware interactions, depending on the sketch design.  Fast Read Mode is considered an advanced use case, and not recommended for the beginner.
+setFastReadMode() -- Using Fast Read Mode in the library works by keeping the SPI connection continuously open.  This may or may not affect the behavior of other hardware interactions, depending on the sketch design.  Fast Read Mode is considered an advanced use case, and not recommended for the beginner.
+
+stopFastReadMode() -- This stops the Fast Read Mode in the library by closing the SPI connection that was open, and doing a reset of the SCL3300.  This may or may not affect the behavior of other hardware interactions, depending on the sketch design.  Fast Read Mode is considered an advanced use case, and not recommended for the beginner.
