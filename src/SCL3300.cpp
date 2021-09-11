@@ -2,14 +2,14 @@
 SCL3300.cpp
 SCL3300 Arduino Driver
 David Armstrong
-Version 3.2.0 - September 3, 2021
+Version 3.3.0 - September 13, 2021
 https://github.com/DavidArmstrong/SCL3300
 
 Resources:
 Uses SPI.h for SPI operation
 
 Development environment specifics:
-Arduino IDE 1.8.9, 1.8.11, 1.8.12, 1.8.13, 1.8.15
+Arduino IDE 1.8.15
 
 This code is released under the [MIT License](http://opensource.org/licenses/MIT).
 Please review the LICENSE.md file included with this example.
@@ -23,7 +23,7 @@ Distributed as-is; no warranty is given.
 // Public Methods //////////////////////////////////////////////////////////
 // Set the sensor mode to the number provided as modeNum.
 boolean SCL3300::setMode(int modeNum) {
-  //Set Sensor mode - If not called, the default is mode 4, as set in header file
+  // Set Sensor mode - If not called, the default is mode 4, as set in header file
   // Only allowed values are: 1,2,3,4
   if (modeNum > 0 && modeNum < 5) {
     scl3300_mode = modeNum;
@@ -40,9 +40,10 @@ boolean SCL3300::setMode(int modeNum) {
 
 // Current Version of begin() to initialize the library and the SCL3300
 boolean SCL3300::begin(void) {
-  if (_spiPort == nullptr) _spiPort = &SPI;
-
   //This is the updated Version 3 begin function
+  // Determine if we need to set up to use the default SPI interface, or some other one
+  if (_spiPort == nullptr) _spiPort = &SPI;
+  
   //Wait the required 1 ms before initializing the SCL3300 inclinomenter
   unsigned long startmillis = millis();
   while (millis() - startmillis < 1) ;
@@ -81,17 +82,16 @@ boolean SCL3300::begin(void) {
 }
 
 // Set up the SPI communication with the SCL3300 with provided Chip Select pin number, and provided SPI port
-// This is NOT supported at this time
 boolean SCL3300::begin(SPIClass &spiPort, uint8_t csPin) {
   scl3300_csPin = csPin;
   _spiPort = &spiPort; //Grab the port the user wants us to use
-
   return begin();
 } // begin
 
 // Set up the SPI communication with the SCL3300 with provided Chip Select pin number
 boolean SCL3300::begin(uint8_t csPin) {
   scl3300_csPin = csPin;
+  _spiPort = &SPI; // With this call, we do the default SPI interface
   return begin();
 } // begin
 
