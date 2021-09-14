@@ -45,7 +45,7 @@ begin(csPinNum)<br>
 This variation allows you to choose a different pin as the SPI Chip Select Pin.  Replace 'csPinNum' with your pin number.
 
 begin(altSpiPort, csPinNum)<br>
-This allows using an alternate SPI port definition for communication to the SCL3300. Please see Example6_AlternateSPI.ino
+This allows using an alternate SPI port definition for communication to the SCL3300. Please see Example9_AlternateSPI.ino
 
 isConnected()<br>
 Returns 'true' if the sensor is still responding as expected, and able to provide valid data. It does not collect a data set from the sensor.
