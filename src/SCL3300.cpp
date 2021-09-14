@@ -2,14 +2,14 @@
 SCL3300.cpp
 SCL3300 Arduino Driver
 David Armstrong
-Version 3.2.0 - September 3, 2021
+Version 3.3.0 - September 13, 2021
 https://github.com/DavidArmstrong/SCL3300
 
 Resources:
 Uses SPI.h for SPI operation
 
 Development environment specifics:
-Arduino IDE 1.8.9, 1.8.11, 1.8.12, 1.8.13, 1.8.15
+Arduino IDE 1.8.15
 
 This code is released under the [MIT License](http://opensource.org/licenses/MIT).
 Please review the LICENSE.md file included with this example.
@@ -23,7 +23,7 @@ Distributed as-is; no warranty is given.
 // Public Methods //////////////////////////////////////////////////////////
 // Set the sensor mode to the number provided as modeNum.
 boolean SCL3300::setMode(int modeNum) {
-  //Set Sensor mode - If not called, the default is mode 4, as set in header file
+  // Set Sensor mode - If not called, the default is mode 4, as set in header file
   // Only allowed values are: 1,2,3,4
   if (modeNum > 0 && modeNum < 5) {
     scl3300_mode = modeNum;
@@ -41,6 +41,9 @@ boolean SCL3300::setMode(int modeNum) {
 // Current Version of begin() to initialize the library and the SCL3300
 boolean SCL3300::begin(void) {
   //This is the updated Version 3 begin function
+  // Determine if we need to set up to use the default SPI interface, or some other one
+  if (_spiPort == nullptr) _spiPort = &SPI;
+  
   //Wait the required 1 ms before initializing the SCL3300 inclinomenter
   unsigned long startmillis = millis();
   while (millis() - startmillis < 1) ;
@@ -79,19 +82,16 @@ boolean SCL3300::begin(void) {
 }
 
 // Set up the SPI communication with the SCL3300 with provided Chip Select pin number, and provided SPI port
-// This is NOT supported at this time
 boolean SCL3300::begin(SPIClass &spiPort, uint8_t csPin) {
   scl3300_csPin = csPin;
-
   _spiPort = &spiPort; //Grab the port the user wants us to use
-  _spiPort->begin(); //call begin, in case the user forgot
-
   return begin();
 } // begin
 
 // Set up the SPI communication with the SCL3300 with provided Chip Select pin number
 boolean SCL3300::begin(uint8_t csPin) {
   scl3300_csPin = csPin;
+  _spiPort = &SPI; // With this call, we do the default SPI interface
   return begin();
 } // begin
 
@@ -353,14 +353,14 @@ double SCL3300::acceleration(int16_t SCL3300_ACC) { //two's complement value exp
 //private functions for serial transmission
 // Begin SPI bus transmission to the device
 void SCL3300::beginTransmission() {
-  SPI.beginTransaction(spiSettings);
+  _spiPort->beginTransaction(spiSettings);
 } //beginTransmission
 
 // End SPI bus transmission to the device
 void SCL3300::endTransmission() {
   // take the chip/slave select high to de-select:
   digitalWrite(scl3300_csPin, HIGH);
-  SPI.endTransaction();
+  _spiPort->endTransaction();
   unsigned long startmillis = millis();
   while (millis() - startmillis < 1) ; //wait a bit
 } //endTransmission
@@ -368,7 +368,7 @@ void SCL3300::endTransmission() {
 //Initialize the Arduino SPI library for the SCL3300 hardware
 void SCL3300::initSPI() {
   //Initialize the Arduino SPI library for the SCL3300 hardware
-  SPI.begin();
+  _spiPort->begin();
   // Maximum SPI frequency is 2 MHz - 4 MHz to achieve the best performance
   // initialize the chip select pin:
   pinMode(scl3300_csPin, OUTPUT);
@@ -432,7 +432,7 @@ unsigned long SCL3300::transfer(unsigned long value) {
   digitalWrite(scl3300_csPin, LOW); //Now chip select can be enabled for the full 32 bit xfer
   SCL3300_DATA = 0;
   for (int i = 3; i >= 0; i--) { //Xfers are done MSB first
-    dataorig.bit8[i] = SPI.transfer(dataorig.bit8[i]);
+    dataorig.bit8[i] = _spiPort->transfer(dataorig.bit8[i]);
   }
   SCL3300_DATA = dataorig.bit8[1] + (dataorig.bit8[2] << 8);
   SCL3300_CRC = dataorig.bit8[0];

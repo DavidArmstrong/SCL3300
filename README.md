@@ -3,7 +3,7 @@
 
 Arduino Library for Murata SCL3300 Inclinometer
 
-  Version 3.2.0 - September 3, 2021
+  Version 3.3.0 - September 13, 2021
 
   By David Armstrong
   https://github.com/DavidArmstrong/Arduino-SCL3300
@@ -38,49 +38,74 @@ For a SAMD-type Arduino, such as the Sparkfun Redboard Turbo or Arduino Zero, th
 
 Basic SCL3300 Library Functions:
 
-begin()         -- This initializes the library and the SPI chip, and by default assigns the SPI Chip Select Pin to Digital Pin 10.
+begin()<br>
+This initializes the library and the SPI chip, and by default assigns the SPI Chip Select Pin to Digital Pin 10.
 
-begin(csPinNum) -- This variation allows you to choose a different pin as the SPI Chip Select Pin.  Replace 'csPinNum' with your pin number.
+begin(csPinNum)<br>
+This variation allows you to choose a different pin as the SPI Chip Select Pin.  Replace 'csPinNum' with your pin number.
 
-isConnected()   -- Returns 'true' if the sensor is still responding as expected, and able to provide valid data.
+begin(altSpiPort, csPinNum)<br>
+This allows using an alternate SPI port definition for communication to the SCL3300. Please see Example9_AlternateSPI.ino
 
-available()     -- Reads the raw SCL3300 sensor data as a group so that all the data is consistent.  Call this first before using the functions below.  Starting with Version 3.0.0, this call should be the conditional in an 'if' statement, and an 'else' clause included to call reset() when available() returns false.  (See the example sketches in the library.)
+isConnected()<br>
+Returns 'true' if the sensor is still responding as expected, and able to provide valid data. It does not collect a data set from the sensor.
 
-getTiltLevelOffsetAngleX() -- Returns a double float of the tilt offset from level value in degrees for the X direction.
+available()<br>
+Reads the raw SCL3300 sensor data as a group so that all the data is consistent.  Call this first before using the functions below.  Starting with Version 3.0.0, this call should be the conditional in an 'if' statement, and an 'else' clause included to call reset() when available() returns false.  (See the example sketches in the library.)
 
-getTiltLevelOffsetAngleY() -- Returns a double float of the tilt offset from level value in degrees for the Y direction.
+getTiltLevelOffsetAngleX()<br>
+Returns a double float of the tilt offset from level value in degrees for the X direction.
 
-getTiltLevelOffsetAngleZ() -- Returns a double float of the tilt offset from level value in degrees for the Z direction.
+getTiltLevelOffsetAngleY()<br>
+Returns a double float of the tilt offset from level value in degrees for the Y direction.
 
-getCalculatedAngleX() -- Returns a double float of the tilt value in degrees (0-360) for the X direction.
+getTiltLevelOffsetAngleZ()<br>
+Returns a double float of the tilt offset from level value in degrees for the Z direction.
 
-getCalculatedAngleY() -- Returns a double float of the tilt value in degrees (0-360) for the Y direction.
+getCalculatedAngleX()<br>
+Returns a double float of the tilt value in degrees (0-360) for the X direction.
 
-getCalculatedAngleZ() -- Returns a double float of the tilt value in degrees (0-360) for the Z direction.
+getCalculatedAngleY()<br>
+Returns a double float of the tilt value in degrees (0-360) for the Y direction.
 
-getCalculatedAccelerometerX() -- Returns a double float of the accelerometer value in units of 'g' for the X direction.
+getCalculatedAngleZ()<br>
+Returns a double float of the tilt value in degrees (0-360) for the Z direction.
 
-getCalculatedAccelerometerY() -- Returns a double float of the accelerometer value in units of 'g' for the Y direction.
+getCalculatedAccelerometerX()<br>
+Returns a double float of the accelerometer value in units of 'g' for the X direction.
 
-getCalculatedAccelerometerZ() -- Returns a double float of the accelerometer value in units of 'g' for the Z direction.
+getCalculatedAccelerometerY()<br>
+Returns a double float of the accelerometer value in units of 'g' for the Y direction.
 
-getTemperatureCelsius()   -- Returns a double float of the temperature in Celsius.
+getCalculatedAccelerometerZ()<br>
+Returns a double float of the accelerometer value in units of 'g' for the Z direction.
 
-getTemperatureFarenheit() -- Returns a double float of the temperature in Farenheit.
+getTemperatureCelsius()<br>
+Returns a double float of the temperature in Celsius.
+
+getTemperatureFarenheit()<br>
+Returns a double float of the temperature in Farenheit.
 
 
 Utility Functions available:
 
-reset()           -- Does a software reset of the SCL3300 sensor.
+reset()<br>
+Does a software reset of the SCL3300 sensor.
 
-getSerialNumber() -- Returns a long integer of the device Serial Number set by the manufacturer.
+getSerialNumber()<br>
+Returns a long integer of the device Serial Number set by the manufacturer.
 
-powerDownMode()   -- Puts the sensor in a power down mode to reduce power usage.
+powerDownMode()<br>
+Puts the sensor in a power down mode to reduce power usage.
 
-WakeMeUp()        -- Revives sensor from being powered down, so that it can start to generate sensor data.
+WakeMeUp()<br>
+Revives sensor from being powered down, so that it can start to generate sensor data.
 
-setMode(modeNum) -- Sets the sensor mode to the number provided as modeNum.  The default mode is '4'.  Valid values are 1, 2, 3, and 4.
+setMode(modeNum)<br>
+Sets the sensor mode to the number provided as modeNum.  The default mode is '4'.  Valid values are 1, 2, 3, and 4.
 
-setFastReadMode() -- Using Fast Read Mode in the library works by keeping the SPI connection continuously open.  This may or may not affect the behavior of other hardware interactions, depending on the sketch design.  Fast Read Mode is considered an advanced use case, and not recommended for the beginner.
+setFastReadMode()<br>
+Using Fast Read Mode in the library works by keeping the SPI connection continuously open.  This may or may not affect the behavior of other hardware interactions, depending on the sketch design.  Fast Read Mode is considered an advanced use case, and not recommended for the beginner.
 
-stopFastReadMode() -- This stops the Fast Read Mode in the library by closing the SPI connection that was open, and doing a reset of the SCL3300.  This may or may not affect the behavior of other hardware interactions, depending on the sketch design.  Fast Read Mode is considered an advanced use case, and not recommended for the beginner.
+stopFastReadMode()<br>
+This stops the Fast Read Mode in the library by closing the SPI connection that was open, and doing a reset of the SCL3300.  This may or may not affect the behavior of other hardware interactions, depending on the sketch design.  Fast Read Mode is considered an advanced use case, and not recommended for the beginner.
