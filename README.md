@@ -3,10 +3,11 @@
 
 Arduino Library for Murata SCL3300 Inclinometer
 
-  Version 3.3.0 - September 13, 2021
+  Version 3.3.1 - July 4, 2022<br>
+  Note: This is not a bug fix, nor a new feature release.  The only change is adding the new Example10_Mode1 sketch, which is useful for more general tilt angle measurement needs.
 
-  By David Armstrong
-  https://github.com/DavidArmstrong/Arduino-SCL3300
+  By David Armstrong<br>
+  https://github.com/DavidArmstrong/Arduino-SCL3300 <br>
   See MIT LICENSE.md file
 
 
